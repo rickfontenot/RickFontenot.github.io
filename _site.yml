@@ -2,7 +2,7 @@ name: "my-website"
 navbar:
   title: "Rick Fontenot"
   left:
-    - text: "About Me"
+    - text: "Home"
       href: index.html
     - text: "Case Study 1"
       href: Budweiser.html
