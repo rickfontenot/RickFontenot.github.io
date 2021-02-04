@@ -13,6 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r echo = FALSE}
 
 library(shiny)
+library(dplyr)
 #install.packages("shinyWidgets")
 library(shinyWidgets)
 library(ggplot2)
@@ -24,8 +25,6 @@ beers <- beers %>% rename(Beer_Name = Name) #both dataframes have "Name"
 breweries <- breweries %>% rename(Brewery_Name = Name)
 beerbrew <- merge(beers,breweries, by.x = "Brewery_id", by.y = "Brew_ID")
 beerbrew$State <- trimws(beerbrew$State)
-
-view(beerbrew)
 
 state_list <- unique(beerbrew$State)
 state_list<-sort(state_list, decreasing=FALSE)
