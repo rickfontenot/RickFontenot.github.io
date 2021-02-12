@@ -11,12 +11,11 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r echo = FALSE}
-
-library(shiny)
-library(dplyr)
+suppressMessages(library(shiny))
+suppressMessages(library(dplyr))
 #install.packages("shinyWidgets")
-library(shinyWidgets)
-library(ggplot2)
+suppressMessages(library(shinyWidgets))
+suppressMessages(library(ggplot2))
 
 beers = read.csv("https://raw.githubusercontent.com/rickfontenot/DS6306_Study1/main/Beers.csv", header = TRUE)
 breweries = read.csv("https://raw.githubusercontent.com/rickfontenot/DS6306_Study1/main/Breweries.csv", header = TRUE)
@@ -153,6 +152,5 @@ server <- function(input, output) {
     
 }
 
-shinyApp(ui, server)
-
+shinyApp(ui, server, options = list(height = 1080, width = 1080))
 ```
