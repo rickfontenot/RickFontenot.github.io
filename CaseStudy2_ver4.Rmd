@@ -1,0 +1,588 @@
+---
+title: "Case Study 2"
+author: "Rick Fontenot"
+date: "2/26/2021"
+output:
+  html_document:
+    self_contained: false
+    lib_dir: libs
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE)
+```
+```{r load-packages, include=FALSE}
+library(dplyr)
+library(tidyverse)
+library(caret)
+library(DataExplorer)
+library(gplots)
+library(graphics)
+library(corrplot)
+library(olsrr)
+library(ggpubr)
+library(rstatix)
+library(dplyr)
+library(tidyverse)
+library(visdat)
+library(GGally)
+library(usmap)
+library(mice)
+library(VIM)
+library(plotly)
+library(caret)
+library(e1071)
+library(class)
+library(maps)
+library(mapproj)
+library(stringr)
+library(ggplot2) 
+library(ggthemes)
+library(table1)
+library(DataExplorer)
+```
+
+Our Client DDSAnalytics specializes in talent management solutions for Fortune 100 companies to develop and retain employees. They have provided a dataset and asked us to identify factors that lead to attrition and to build a model to predict attrition. They are also interested in identifying some interesting trends between Job Roles as well as building a model to predict Salaries.
+
+To start the exploration we will load the data and perform univariate analysis
+
+```{r univariate}
+DDS = read.csv("/Users/rickfontenot/Dropbox/SMU/GitHub/SMU/DS6306/CaseStudy2/CaseStudy2-data.csv", header = TRUE)
+
+#Create List of numeric varibles
+DDS_numeric <- names(DDS %>% select(where(is.numeric)))
+#remove ID, EmployeeNumber and categorical/character variables
+DDS_numeric <- DDS_numeric[-c(1,7)]
+
+#Create List of non-numeric varibles
+DDS_categorical <- names(DDS %>% select(!where(is.numeric)))
+
+#Convert character variables to factors
+DDS[sapply(DDS, is.character)] <- lapply(DDS[sapply(DDS, is.character)], as.factor)
+
+plot_histogram(DDS)
+#EmployeeNumber and ID are identifers, not for further analysis
+#Non-normal or skewed distributions for DistanceFromHome, MonthlyIncome, NumCompaniesWorked, PercentSalaryHike, TotalWorkingYears, YearsInCurrentRole, YearsSinceLastPromotion
+
+#Perform Log transformations for variables with non-normal distributions
+DDS_transformed <- DDS
+DDS_transformed["logDistanceFromHome"] = log(DDS_transformed$DistanceFromHome)
+DDS_transformed["logMonthlyIncome"] = log(DDS_transformed$MonthlyIncome)
+DDS_transformed["logNumCompaniesWorked"] = log(DDS_transformed$NumCompaniesWorked)
+DDS_transformed["logPercentSalaryHike"] = log(DDS_transformed$PercentSalaryHike)
+DDS_transformed["logTotalWorkingYears"] = log(DDS_transformed$TotalWorkingYears)
+DDS_transformed["logYearsInCurrentRole"] = log(DDS_transformed$YearsInCurrentRole)
+DDS_transformed["logYearsSinceLastPromotion"] = log(DDS_transformed$YearsSinceLastPromotion)
+
+DDS_transformed = subset(DDS_transformed, select = -c(DistanceFromHome,MonthlyIncome,NumCompaniesWorked,PercentSalaryHike,TotalWorkingYears,YearsInCurrentRole,YearsSinceLastPromotion))
+
+#Replace -inf from log transformation with 0
+DDS_transformed <- DDS_transformed %>% mutate_if(is.numeric, function(x) ifelse(is.infinite(x), 0, x))
+
+#Log transformations show more normal distributions
+plot_histogram(DDS_transformed)
+
+plot_bar(DDS)
+#Over18 is all "Y", StandardHours all 80, EmployeeCount all 1, may not be valuable for further analysis
+```
+
+Explore Correlations and relationships between variables
+
+```{r corr-EDA}
+#Create function to summarize the most significant correlations since there are too many variables for one plot
+corr_simple <- function(data=df,sig=0.5){
+  #convert data to numeric in order to run correlations
+  #convert to factor first to keep the integrity of the data - each value will become a number rather than turn into NA
+  df_cor <- data %>% mutate_if(is.character, as.factor)
+  df_cor <- df_cor %>% mutate_if(is.factor, as.numeric)
+  #run a correlation and drop the insignificant ones
+  corr <- cor(df_cor)
+  #prepare to drop duplicates and correlations of 1     
+  corr[lower.tri(corr,diag=TRUE)] <- NA 
+  #drop perfect correlations
+  corr[corr == 1] <- NA 
+  #turn into a 3-column table
+  corr <- as.data.frame(as.table(corr))
+  #remove the NA values from above 
+  corr <- na.omit(corr) 
+  #select significant values  
+  corr <- subset(corr, abs(Freq) > sig) 
+  #sort by highest correlation
+  corr <- corr[order(-abs(corr$Freq)),] 
+  #print table
+  print(corr)
+  #turn corr back into matrix in order to plot with corrplot
+  mtx_corr <- reshape2::acast(corr, Var1~Var2, value.var="Freq")
+  
+  #plot correlations visually
+  corrplot(mtx_corr, is.corr=FALSE, tl.col="black", na.label=" ")
+}
+corr_simple(DDS_transformed)
+
+#High Correlations between:
+#JobLevel	logMonthlyIncome	0.9224617	
+#YearsAtCompany	YearsWithCurrManager	0.7652262	
+#YearsAtCompany	logYearsInCurrentRole	0.7402284	
+#logMonthlyIncome	logTotalWorkingYears	0.7230435	
+#PerformanceRating	logPercentSalaryHike	0.7229374	
+#YearsWithCurrManager	logYearsInCurrentRole	0.7117700	
+#JobLevel	logTotalWorkingYears	0.6758712	
+#Department	JobRole	0.6668582	
+#MaritalStatus	StockOptionLevel	-0.6450310	  
+```
+
+Evaluate significance of categorical variables effect on Attrition:
+
+Based on Chi-Square tests, difference in Attrition rates are highly significant between categories for: OverTime, JobRole, MaritalStatus
+
+There is also some significant difference for: Department, and BusinessTravel
+
+```{r Cat-v-Attrition, message=FALSE}
+#Prepare tables and perform Chi-Square tests for categorical by Attrition
+OverTime = table(DDS$Attrition, DDS$OverTime)
+OverTimechisq <- chisq.test(OverTime) #p-value = 2.333e-15
+JobRole = table(DDS$Attrition, DDS$JobRole)
+JobRolechisq <- chisq.test(JobRole) #p-value = 3.647e-10
+MaritalStatus = table(DDS$Attrition, DDS$MaritalStatus)
+MaritalStatuschisq <- chisq.test(MaritalStatus) #p-value = 3.379e-08
+Department = table(DDS$Attrition, DDS$Department)
+Departmentchisq <- chisq.test(Department) #p-value = 0.009424
+BusinessTravel = table(DDS$Attrition, DDS$BusinessTravel)
+BusinessTravelchisq <- chisq.test(BusinessTravel) #p-value = 0.04993
+EducationField = table(DDS$Attrition, DDS$EducationField)
+EducationFieldchisq <- chisq.test(EducationField) #p-value = 0.2682
+Gender = table(DDS$Attrition, DDS$Gender)
+Genderchisq <- chisq.test(Gender) #p-value = 0.5151
+
+#Plots and observations for variables with significant difference in Attrition Rates
+
+mosaicplot(OverTime, shade = TRUE, las=2, main = "OverTime", pop = FALSE)
+OverTime
+#Jobs with overtime have significantly higher attrition rate
+
+mosaicplot(JobRole, shade = TRUE, las=2, main = "JobRole", pop = FALSE)
+JobRole
+#Sales representatives have significantly higher attrition rate
+#Manufacturing Directors and Research Directors have significantly lower attrition rate
+#May want to reduce level of factors from 9, to just 3 with SalesRep, Director, & Other
+
+DDS["JobRoleBin"]=character()
+DDS$JobRoleBin="Other"
+
+DDS$JobRole <- as.character(DDS$JobRole)
+DDS$JobRoleBin[DDS$JobRole %in% c("Research Director")] <- "Director"
+DDS$JobRoleBin[DDS$JobRole %in% c("Manufacturing Director")] <- "Director"
+DDS$JobRoleBin[DDS$JobRole %in% c("Sales Representative")] <- "SalesRep"
+DDS$JobRoleBin <- factor(DDS$JobRoleBin)
+DDS$JobRole <- factor(DDS$JobRole)
+
+
+JobRoleBin = table(DDS$Attrition, DDS$JobRoleBin)
+JobRoleBinchisq <- chisq.test(JobRoleBin) #p-value improves to 2.54e-12
+
+mosaicplot(MaritalStatus, shade = TRUE, las=2, main = "MaritalStatus", pop = FALSE)
+MaritalStatus
+#Single workers have significantly high attrition rate
+#Divorced workers have significantly low attirion rate
+
+mosaicplot(Department, shade = TRUE, las=2, main = "Department", pop = FALSE)
+Department
+#Sales has significantly higher attrition rate, this variable may not have independence from JobRole variable
+
+JobRole_v_Department = table(DDS$JobRole, DDS$Department)
+JobRole_v_Department
+#Both Sales Reps and Sales Executives included in "Sales" Department, JobRole showed significant difference between Rep & Exec. Based on Lack of Independence, Department could be dropped from Attrition rate predections
+
+```
+
+Evaluate significance of Numerical Variables on Attrition
+
+```{r Num-v-Attrition}
+#Create dataframe of numerical independent variables excluding Over18,StandardHours,EmployeeCount
+#Use log transformed data to meet t-test assumptions
+DDS_transformed["JobRoleBin"]=character()
+DDS_transformed$JobRoleBin="Other"
+
+DDS_transformed$JobRole <- as.character(DDS$JobRole)
+DDS_transformed$JobRoleBin[DDS_transformed$JobRole %in% c("Research Director")] <- "Director"
+DDS_transformed$JobRoleBin[DDS_transformed$JobRole %in% c("Manufacturing Director")] <- "Director"
+DDS_transformed$JobRoleBin[DDS_transformed$JobRole %in% c("Sales Representative")] <- "SalesRep"
+DDS_transformed$JobRoleBin <- factor(DDS_transformed$JobRoleBin)
+DDS_transformed$JobRole <- factor(DDS_transformed$JobRole)
+
+
+Numerical <- DDS_transformed %>% select(-DDS_categorical,-JobRoleBin,-Over18,-StandardHours,-EmployeeCount,Attrition)
+
+Numerical_long <- gather(Numerical, key="variable", value="value",-c(ID,Attrition))
+
+stat.test <- Numerical_long %>%
+  group_by(variable) %>%
+  t_test(value ~ Attrition) %>%
+  adjust_pvalue(method = "BH") %>%
+  add_significance()
+
+#Sort and display numerical variables with highest significant difference by Attrition
+stat.test <- stat.test %>% select(p, everything())
+stat.test <- stat.test[order(stat.test$p),] 
+stat.test
+```
+
+Variable Importance and selection for predicting Attrition
+
+```{r VarImportance}
+
+DDS_transformed <- DDS_transformed %>% select(-EmployeeCount,-StandardHours,-Over18)
+DDS_transformed <- DDS_transformed %>% select(Attrition, everything())
+
+str(DDS_transformed)
+# prepare training scheme
+control <- trainControl(method="repeatedcv", number=10, repeats=3)
+# train the model
+model <- train(Attrition~., data=DDS_transformed, method="lvq", trControl=control)
+# estimate variable importance
+importance <- varImp(model, scale=FALSE)
+# summarize importance
+print(importance)
+# plot importance
+plot(importance)
+
+
+library(CORElearn)
+information.gain <- attrEval(Attrition ~ ., data=DDS_transformed,  estimator = "InfGain")
+sort(information.gain)
+
+```
+
+Build Naive Bayes predictor for Attrition starting with high importance variables, then tune based on correlated variables and p-values
+
+```{r NaiveBayes}
+
+#Split Train & Test
+trainIndices = sample(seq(1:length(DDS_transformed$Age)),round(.7*length(DDS_transformed$Age)))
+trainDDS = DDS_transformed[trainIndices,]
+testDDS = DDS_transformed[-trainIndices,]
+
+#Model 1 including all features with significant p-values or importance
+features=c("OverTime","JobRoleBin","logMonthlyIncome","logTotalWorkingYears","MaritalStatus","logYearsInCurrentRole","JobLevel","JobInvolvement","YearsWithCurrManager","StockOptionLevel","Age","YearsAtCompany","JobSatisfaction","Department","WorkLifeBalance","EnvironmentSatisfaction","BusinessTravel","logDistanceFromHome")
+
+#Specificity=70.59 % Acc=86.59 Sensitivity=88.99
+model = naiveBayes(trainDDS[,features],as.factor(trainDDS$Attrition),laplace=1)
+confusionMatrix(table(predict(model,testDDS[,features]),testDDS$Attrition))
+
+#Model 2: Remove Department since correlated with JobRoleBin
+features2=c("OverTime","JobRoleBin","logMonthlyIncome","logTotalWorkingYears","MaritalStatus","logYearsInCurrentRole","JobLevel","JobInvolvement","YearsWithCurrManager","StockOptionLevel","Age","YearsAtCompany","JobSatisfaction","WorkLifeBalance","EnvironmentSatisfaction","BusinessTravel","logDistanceFromHome")
+
+#Specificity=67.65 % Acc=85.82, Sensitivity=88.55 both are decreases from Model1
+model = naiveBayes(trainDDS[,features2],as.factor(trainDDS$Attrition),laplace=1)
+confusionMatrix(table(predict(model,testDDS[,features2]),testDDS$Attrition))
+
+#Model 3: Remove YearsAtCompany
+features3=c("OverTime","JobRoleBin","logMonthlyIncome","logTotalWorkingYears","MaritalStatus","logYearsInCurrentRole","JobLevel","JobInvolvement","YearsWithCurrManager","StockOptionLevel","Age","JobSatisfaction","Department","WorkLifeBalance","EnvironmentSatisfaction","BusinessTravel","logDistanceFromHome")
+
+#Specificity =67.65 % Acc=86.59  Sensitivity=89.43 Specificity decreased
+model = naiveBayes(trainDDS[,features3],as.factor(trainDDS$Attrition),laplace=1)
+confusionMatrix(table(predict(model,testDDS[,features3]),testDDS$Attrition))
+
+#Model 4 Scale all numerical values
+DDS_scaled <- DDS_transformed %>% mutate_if(is.numeric,scale)
+trainIndices = sample(seq(1:length(DDS_transformed$Age)),round(.7*length(DDS_transformed$Age)))
+trainDDS_scaled = DDS_scaled[trainIndices,]
+testDDS_scaled = DDS_scaled[-trainIndices,]
+
+features4=c("OverTime","JobRoleBin","logMonthlyIncome","logTotalWorkingYears","MaritalStatus","logYearsInCurrentRole","JobLevel","JobInvolvement","YearsWithCurrManager","StockOptionLevel","Age","YearsAtCompany","JobSatisfaction","Department","WorkLifeBalance","EnvironmentSatisfaction","BusinessTravel","logDistanceFromHome")
+
+#Specificity =57.58 % Acc=86.21 Sensitivity=88.94 both are decreases from non-scaled model
+model = naiveBayes(trainDDS_scaled[,features4],as.factor(trainDDS_scaled$Attrition),laplace=1)
+confusionMatrix(table(predict(model,testDDS_scaled[,features4]),testDDS_scaled$Attrition))
+
+#Model 5 remove JobLevel since it is highly correlated with Monthly Income
+features=c("OverTime","JobRoleBin","logMonthlyIncome","logTotalWorkingYears","MaritalStatus","logYearsInCurrentRole","JobInvolvement","YearsWithCurrManager","StockOptionLevel","Age","YearsAtCompany","JobSatisfaction","Department","WorkLifeBalance","EnvironmentSatisfaction","BusinessTravel","logDistanceFromHome")
+
+#Specificity =67.65 % Acc=88.12 Sensitivity=91.19  lowered specificity but increased accuracy
+model = naiveBayes(trainDDS[,features],as.factor(trainDDS$Attrition),laplace=1)
+confusionMatrix(table(predict(model,testDDS[,features]),testDDS$Attrition))
+
+#Model 6: Remove YearsWithCurrManager & YearsAtCompany since correlated with logYearsInCurrentRole which has lowest p-value
+features6=c("OverTime","JobRoleBin","logMonthlyIncome","logTotalWorkingYears","MaritalStatus","logYearsInCurrentRole","JobLevel","JobInvolvement","StockOptionLevel","Age","JobSatisfaction","Department","WorkLifeBalance","EnvironmentSatisfaction","BusinessTravel","logDistanceFromHome")
+
+#Specificity =67.65 % Acc=86.97 Sensitivity=89.87 lower specificity, slightly higher accuracy
+model = naiveBayes(trainDDS[,features6],as.factor(trainDDS$Attrition),laplace=1)
+confusionMatrix(table(predict(model,testDDS[,features6]),testDDS$Attrition))
+
+#Model 7: Remove YearsWithCurrManager & logYearsInCurrentRole since correlated with YearsAtCompany which has highest variable importance
+features7=c("OverTime","JobRoleBin","logMonthlyIncome","logTotalWorkingYears","MaritalStatus","JobLevel","JobInvolvement","StockOptionLevel","Age","YearsAtCompany","JobSatisfaction","Department","WorkLifeBalance","EnvironmentSatisfaction","BusinessTravel","logDistanceFromHome")
+
+#Specificity =64.71 % Acc=87.74 Sensitivity=91.19 lower specificity but higher accuracy
+model = naiveBayes(trainDDS[,features7],as.factor(trainDDS$Attrition),laplace=1)
+confusionMatrix(table(predict(model,testDDS[,features7]),testDDS$Attrition))
+
+#Model 8 Remove	logTotalWorkingYears since correlated with logMonthlyIncome
+features8=c("OverTime","JobRoleBin","logMonthlyIncome","MaritalStatus","logYearsInCurrentRole","JobLevel","JobInvolvement","YearsWithCurrManager","StockOptionLevel","Age","YearsAtCompany","JobSatisfaction","Department","WorkLifeBalance","EnvironmentSatisfaction","BusinessTravel","logDistanceFromHome")
+
+#Specificity =73.53 % Acc=87.36 Sensitivity=89.43 improved on both
+model = naiveBayes(trainDDS[,features8],as.factor(trainDDS$Attrition),laplace=1)
+confusionMatrix(table(predict(model,testDDS[,features8]),testDDS$Attrition))
+
+#Model 9 Combine improvements from Models 5,7 & 8: Remove JobLevel, YearsWithCurrManager, logYearsInCurrentRole, logTotalWorkingYears
+features9=c("OverTime","JobRoleBin","logMonthlyIncome","MaritalStatus","JobInvolvement","StockOptionLevel","Age","YearsAtCompany","JobSatisfaction","Department","WorkLifeBalance","EnvironmentSatisfaction","BusinessTravel","logDistanceFromHome")
+
+#Specificity=58.82 % Acc=90.42 Sensitivity=95.15 sensitivity dropped below threshold
+model = naiveBayes(trainDDS[,features9],as.factor(trainDDS$Attrition),laplace=1)
+confusionMatrix(table(predict(model,testDDS[,features9]),testDDS$Attrition))
+
+#Model 10 Combine improvements from Models 5 & 8: Remove JobLevel & logTotalWorkingYears
+features10=c("OverTime","JobRoleBin","logMonthlyIncome","MaritalStatus","logYearsInCurrentRole","JobInvolvement","YearsWithCurrManager","StockOptionLevel","Age","YearsAtCompany","JobSatisfaction","Department","WorkLifeBalance","EnvironmentSatisfaction","BusinessTravel","logDistanceFromHome")
+
+#Specificity=73.53 % Acc=90.42 Sensitivity=92.95
+model10 = naiveBayes(trainDDS[,features10],as.factor(trainDDS$Attrition),laplace=1)
+confusionMatrix(table(predict(model10,testDDS[,features10]),testDDS$Attrition))
+
+#Model 11 Combine improvements from Models 7 & 8: Remove YearsWithCurrManager, logYearsInCurrentRole, logTotalWorkingYears
+features11=c("OverTime","JobRoleBin","logMonthlyIncome","MaritalStatus","JobLevel","JobInvolvement","StockOptionLevel","Age","YearsAtCompany","JobSatisfaction","Department","WorkLifeBalance","EnvironmentSatisfaction","BusinessTravel","logDistanceFromHome")
+
+#Specificity=64.71 % Acc=90.04 Sensitivity=93.83
+model = naiveBayes(trainDDS[,features11],as.factor(trainDDS$Attrition),laplace=1)
+confusionMatrix(table(predict(model,testDDS[,features11]),testDDS$Attrition))
+
+#Model 11 Combine improvements from Models 5 & 7: Remove JobLevel, YearsWithCurrManager, logYearsInCurrentRole
+features11=c("OverTime","JobRoleBin","logMonthlyIncome","logTotalWorkingYears","MaritalStatus","JobInvolvement","StockOptionLevel","Age","YearsAtCompany","JobSatisfaction","Department","WorkLifeBalance","EnvironmentSatisfaction","BusinessTravel","logDistanceFromHome")
+
+#Specificity=64.71 % Acc=88.89 Sensitivity=92.51
+model = naiveBayes(trainDDS[,features11],as.factor(trainDDS$Attrition),laplace=1)
+confusionMatrix(table(predict(model,testDDS[,features11]),testDDS$Attrition))
+
+#Best Model: Highest Accuracy while meeting Sensitivity&Specificity>60% is Model #10
+#Features: "OverTime","JobRoleBin","logMonthlyIncome","MaritalStatus","logYearsInCurrentRole","JobInvolvement","YearsWithCurrManager","StockOptionLevel","Age","YearsAtCompany","JobSatisfaction","Department","WorkLifeBalance","EnvironmentSatisfaction","BusinessTravel","logDistanceFromHome"
+#Accuracy=90.42% Specificity=73.53% Sensitivity=92.95
+```
+
+Use Best Model to predict attrition for Competition Set
+
+```{r competition1}
+Competition = read.csv("/Users/rickfontenot/Dropbox/SMU/GitHub/SMU/DS6306/CaseStudy2/CaseStudy2CompSet No Attrition.csv", header = TRUE)
+
+#Select variables of interest
+Competition <- Competition %>% select(ID,OverTime,JobRole,MonthlyIncome,MaritalStatus,YearsInCurrentRole,JobInvolvement,YearsWithCurrManager,StockOptionLevel,Age,YearsAtCompany,JobSatisfaction,Department,WorkLifeBalance,EnvironmentSatisfaction,BusinessTravel,DistanceFromHome)
+
+#Transform logMonthlyIncome logYearsInCurrentRole logDistanceFromHome
+Competition_transformed <- Competition
+Competition_transformed["logDistanceFromHome"] = log(Competition_transformed$DistanceFromHome)
+Competition_transformed["logMonthlyIncome"] = log(Competition_transformed$MonthlyIncome)
+Competition_transformed["logYearsInCurrentRole"] = log(Competition_transformed$YearsInCurrentRole)
+
+Competition_transformed = subset(Competition_transformed, select = -c(DistanceFromHome,MonthlyIncome,YearsInCurrentRole))
+
+#Replace -inf from log transformation with 0
+Competition_transformed <- Competition_transformed %>% mutate_if(is.numeric, function(x) ifelse(is.infinite(x), 0, x))
+
+#Create Bins for Job Role
+Competition_transformed$JobRole <- as.character(Competition_transformed$JobRole)
+Competition_transformed$JobRoleBin = "Other"
+Competition_transformed$JobRoleBin[Competition_transformed$JobRole %in% c("Research Director")] <- "Director"
+Competition_transformed$JobRoleBin[Competition_transformed$JobRole %in% c("Manufacturing Director")] <- "Director"
+Competition_transformed$JobRoleBin[Competition_transformed$JobRole %in% c("Sales Representative")] <- "SalesRep"
+Competition_transformed$JobRoleBin <- factor(Competition_transformed$JobRoleBin)
+Competition_transformed$JobRole <- factor(Competition_transformed$JobRole)
+Competition_transformed = subset(Competition_transformed, select = -c(JobRole))
+
+#Convert character variables to factors
+Competition_transformed[sapply(Competition_transformed, is.character)] <- lapply(Competition_transformed[sapply(Competition_transformed, is.character)], as.factor)
+
+#Use Model#10 to make Attrition Predictions for competition set
+Competition_transformed["Attrition"]<-predict(model10,Competition_transformed[,features10])
+summary(Competition_transformed["Attrition"])
+#Predictions: No=268 Yes=32, AttritionRate = 10.67%
+
+#Reoder Columns to have ID and Attrition Prediction first
+Competition_transformed <- Competition_transformed %>% select(ID,Attrition)
+
+
+#Output File with predictions
+write.csv(Competition_transformed,"/Users/rickfontenot/Dropbox/SMU/GitHub/SMU/DS6306/CaseStudy2/Case2PredictionsFontenot Attrition.csv", row.names = TRUE)
+```
+
+Correlations with Monthly Income
+
+```{r corr-Income}
+
+DDS_cor <- DDS %>% select(-Over18,-EmployeeCount,-StandardHours,-ID,-EmployeeNumber)
+
+#Convert Categoricals from int to factors
+DDS_cor[,'JobInvolvement']<-factor(DDS_cor[,'JobInvolvement'])
+DDS_cor[,'JobLevel']<-factor(DDS_cor[,'JobLevel'])
+DDS_cor[,'JobSatisfaction']<-factor(DDS_cor[,'JobSatisfaction'])
+DDS_cor[,'JobInvolvement']<-factor(DDS_cor[,'JobInvolvement'])
+DDS_cor[,'Education']<-factor(DDS_cor[,'Education'])
+DDS_cor[,'EnvironmentSatisfaction']<-factor(DDS_cor[,'EnvironmentSatisfaction'])
+DDS_cor[,'NumCompaniesWorked']<-factor(DDS_cor[,'NumCompaniesWorked'])
+DDS_cor[,'PerformanceRating']<-factor(DDS_cor[,'PerformanceRating'])
+DDS_cor[,'RelationshipSatisfaction']<-factor(DDS_cor[,'RelationshipSatisfaction'])
+DDS_cor[,'StockOptionLevel']<-factor(DDS_cor[,'StockOptionLevel'])
+DDS_cor[,'TrainingTimesLastYear']<-factor(DDS_cor[,'TrainingTimesLastYear'])
+DDS_cor[,'WorkLifeBalance']<-factor(DDS_cor[,'WorkLifeBalance'])
+DDS_cor[,'TrainingTimesLastYear']<-factor(DDS_cor[,'TrainingTimesLastYear'])
+
+#Split Train & Test
+trainIndices = sample(seq(1:length(DDS_cor$Age)),round(.7*length(DDS_cor$Age)))
+trainDDS_cor = DDS_cor[trainIndices,]
+testDDS_cor = DDS_cor[-trainIndices,]
+
+#Build Model with all variables to create baseline, then use base model for selection methods
+model <- lm(MonthlyIncome ~ ., data = trainDDS_cor)
+summary(model)
+
+#Variable Selection Methods
+
+#Forward step selection 8 parameters included, RMSE = 955, Adj. R2=0.9572
+step.forward <- ols_step_forward_p(model)
+step.forward
+
+#Backward step selection 18 parameters removed (30-18=12 remain), RMSE = 952, Adj. R2=0.9575
+step.backward <- ols_step_backward_p(model)
+step.backward
+
+#Stepwise selection 6 parameters, RMSE=957, Adj. R2=0.957
+stepwise <- ols_step_both_p(model)
+stepwise
+
+#Best fit from forward selection includes parameters: JobLevel + JobRole + TotalWorkingYears + BusinessTravel + Education + DailyRate + JobInvolvement + YearsWithCurrManager
+
+#Examine scatter plots to look for any non-linear relationships that may need transformation
+plot(DDS_cor$JobLevel,DDS_cor$MonthlyIncome)
+plot(DDS_cor$JobRole,DDS_cor$MonthlyIncome)
+plot(DDS_cor$TotalWorkingYears,DDS_cor$MonthlyIncome)
+plot(DDS_cor$BusinessTravel,DDS_cor$MonthlyIncome)
+plot(DDS_cor$Education,DDS_cor$MonthlyIncome)
+plot(DDS_cor$DailyRate,DDS_cor$MonthlyIncome)
+plot(DDS_cor$JobInvolvement,DDS_cor$MonthlyIncome)
+plot(DDS_cor$YearsWithCurrManager,DDS_cor$MonthlyIncome)
+
+#Model2 based on variables from forward and backward selection methods
+model2 <- lm(MonthlyIncome ~ JobLevel + JobRole + TotalWorkingYears + BusinessTravel + Education + DailyRate + JobInvolvement + YearsWithCurrManager, data = trainDDS_cor)
+summary(model2)
+mse=mean(residuals(model2)^2)
+mse
+rmse=sqrt(mse)
+rmse #935
+  
+plot(model2, which=1, col=c("blue")) # Residuals vs Fitted Plot
+plot(model2, which=2, col=c("red"))  # Q-Q Plot
+plot(model2, which=3, col=c("blue"))  # Scale-Location Plot
+plot(model2, which=4, col=c("blue"))  # CooksD
+plot(model2, which=5, col=c("blue"))  # Residuals vs Leverage
+
+
+#Model3 remove YearsWithCurrentManager which had high p-value in Model2
+model3 <- lm(MonthlyIncome ~ JobLevel + JobRole + TotalWorkingYears + BusinessTravel + Education + DailyRate + JobInvolvement, data = trainDDS_cor)
+summary(model3)
+mse=mean(residuals(model3)^2)
+mse
+rmse=sqrt(mse)
+rmse #936
+
+plot(model3, which=1, col=c("blue")) # Residuals vs Fitted Plot
+plot(model3, which=2, col=c("red"))  # Q-Q Plot
+plot(model3, which=3, col=c("blue"))  # Scale-Location Plot
+plot(model3, which=4, col=c("blue"))  # CooksD
+plot(model3, which=5, col=c("blue"))  # Residuals vs Leverage
+
+#Model4 remove DailyRate which had high p-value in Model3
+model4 <- lm(MonthlyIncome ~ JobLevel + JobRole + TotalWorkingYears + BusinessTravel + Education + JobInvolvement, data = trainDDS_cor)
+summary(model4)
+mse=mean(residuals(model3)^2)
+mse
+rmse=sqrt(mse)
+rmse #936
+
+plot(model4, which=1, col=c("blue")) # Residuals vs Fitted Plot
+plot(model4, which=2, col=c("red"))  # Q-Q Plot
+plot(model4, which=3, col=c("blue"))  # Scale-Location Plot
+plot(model4, which=4, col=c("blue"))  # CooksD
+plot(model4, which=5, col=c("blue"))  # Residuals vs Leverage
+
+plot(trainDDS_cor$JobLevel,residuals(model4))
+plot(trainDDS_cor$JobRole,residuals(model4))
+plot(trainDDS_cor$TotalWorkingYears,residuals(model4))
+plot(trainDDS_cor$BusinessTravel,residuals(model4))
+plot(trainDDS_cor$Education,residuals(model4))
+plot(trainDDS_cor$JobInvolvement,residuals(model4))
+
+#Model4 Predictions on Testing set
+testDDS_cor$prediction <- predict(model4, testDDS_cor)
+testDDS_cor$residual <- testDDS_cor$MonthlyIncome - testDDS_cor$prediction
+mse=mean((testDDS_cor$residual)^2)
+mse
+rmse=sqrt(mse)
+rmse #1115
+
+```
+
+Use Best Model to predict attrition for Competition Set
+
+```{r competition2}
+Competition2 = read.csv("/Users/rickfontenot/Dropbox/SMU/GitHub/SMU/DS6306/CaseStudy2/CaseStudy2CompSet No Salary.csv", header = TRUE)
+
+#Select variables of interest
+Competition2 <- Competition2 %>% select(ID,JobLevel,JobRole,TotalWorkingYears,BusinessTravel,Education,JobInvolvement)
+
+
+#Convert Categoricals from int to factors
+Competition2[,'JobInvolvement']<-factor(Competition2[,'JobInvolvement'])
+Competition2[,'JobLevel']<-factor(Competition2[,'JobLevel'])
+Competition2[,'JobInvolvement']<-factor(Competition2[,'JobInvolvement'])
+Competition2[,'Education']<-factor(Competition2[,'Education'])
+Competition2[,'JobRole']<-factor(Competition2[,'JobRole'])
+Competition2[,'BusinessTravel']<-factor(Competition2[,'BusinessTravel'])
+
+#Model4 Predictions on Competition set
+Competition2$MonthlyIncome <- predict(model4, Competition2)
+
+#Select Columns to output
+Competition2.predictions <- Competition2 %>% select(ID,MonthlyIncome)
+
+#Output File with predictions
+write.csv(Competition2.predictions,"/Users/rickfontenot/Dropbox/SMU/GitHub/SMU/DS6306/CaseStudy2/Case2PredictionsFontenot Salary.csv", row.names = TRUE)
+```
+
+Explore JobRole specific trends
+
+```{r JobRole, message=FALSE}
+#Create dataframe of numerical independent variables excluding Over18,StandardHours,EmployeeCount
+
+Numerical3 <- DDS %>% select(-DDS_categorical,-JobRoleBin,-Over18,-StandardHours,-EmployeeCount,JobRole)
+
+Numerical3_long <- gather(Numerical3, key="variable", value="value",-c(ID,JobRole))
+
+stat.test3 <- Numerical3_long %>%
+  group_by(variable) %>%
+  t_test(value ~ JobRole) %>%
+  adjust_pvalue(method = "BH") %>%
+  add_significance()
+
+stat.test3 <- stat.test3 %>% select(p, everything())
+stat.test3 <- stat.test3[order(stat.test3$p),] 
+stat.test3
+
+par(mar=c(12,5,1,1))   # extra large bottom margin
+plot(Numerical3$JobRole,Numerical3$JobLevel, ylab="JobLevel",las=2)
+plot(Numerical3$JobRole,Numerical3$MonthlyIncome, ylab="MonthlyIncome",las=2)
+plot(Numerical3$JobRole,Numerical3$TotalWorkingYears, ylab="TotalWorkingYears",las=2)
+plot(Numerical3$JobRole,Numerical3$Age, ylab="Age",las=2)
+plot(Numerical3$JobRole,Numerical3$YearsAtCompany, ylab="YearsAtCompany",las=2)
+
+MaritalStatus = table(DDS$JobRole, DDS$MaritalStatus)
+mosaicplot(MaritalStatus, shade = TRUE, las=2, main = "MaritalStatus", pop = FALSE)
+MaritalStatus
+#Significantly Higher Rate of Single people within Sales Rep job role
+
+JobSatisfaction = table(DDS$JobRole, DDS$JobSatisfaction)
+mosaicplot(JobSatisfaction, shade = TRUE, las=2, main = "JobSatisfaction", pop = FALSE)
+JobSatisfaction
+
+```
+
+Session Information
+
+```{r session}
+sessionInfo()
+```
