@@ -14,15 +14,15 @@
 
 <title>Case Study 2</title>
 
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
-<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
-<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
-<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
-<script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
-<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="libs/navigation-1.1/tabsets.js"></script>
+<link href="libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="libs/highlightjs-9.12.0/highlight.js"></script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -110,93 +110,6 @@ summary {
 </style>
 
 
-<style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 51px;
-  padding-bottom: 40px;
-}
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h2 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h3 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h4 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h5 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h6 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.dropdown-submenu {
-  position: relative;
-}
-.dropdown-submenu>.dropdown-menu {
-  top: 0;
-  left: 100%;
-  margin-top: -6px;
-  margin-left: -1px;
-  border-radius: 0 6px 6px 6px;
-}
-.dropdown-submenu:hover>.dropdown-menu {
-  display: block;
-}
-.dropdown-submenu>a:after {
-  display: block;
-  content: " ";
-  float: right;
-  width: 0;
-  height: 0;
-  border-color: transparent;
-  border-style: solid;
-  border-width: 5px 0 5px 5px;
-  border-left-color: #cccccc;
-  margin-top: 5px;
-  margin-right: -10px;
-}
-.dropdown-submenu:hover>a:after {
-  border-left-color: #ffffff;
-}
-.dropdown-submenu.pull-left {
-  float: none;
-}
-.dropdown-submenu.pull-left>.dropdown-menu {
-  left: -100%;
-  margin-left: 10px;
-  border-radius: 6px 0 6px 6px;
-}
-</style>
-
-<script>
-// manage active state of menu based on current page
-$(document).ready(function () {
-  // active menu anchor
-  href = window.location.pathname
-  href = href.substr(href.lastIndexOf('/') + 1)
-  if (href === "")
-    href = "index.html";
-  var menuAnchor = $('a[href="' + href + '"]');
-
-  // mark it active
-  menuAnchor.parent().addClass('active');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
-});
-</script>
 
 <!-- tabsets -->
 
@@ -270,35 +183,6 @@ $(document).ready(function () {
 
 
 
-<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="index.html">Rick Fontenot</a>
-    </div>
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-        <li>
-  <a href="index.html">Home</a>
-</li>
-<li>
-  <a href="Budweiser.html">Case Study 1</a>
-</li>
-<li>
-  <a href="CaseStudy2_ver4.html">Case Study 2</a>
-</li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        
-      </ul>
-    </div><!--/.nav-collapse -->
-  </div><!--/.container -->
-</div><!--/.navbar -->
-
 <div class="fluid-row" id="header">
 
 
@@ -311,7 +195,6 @@ $(document).ready(function () {
 
 
 <p>Our Client DDSAnalytics specializes in talent management solutions for Fortune 100 companies to develop and retain employees. They have provided a dataset and asked us to identify factors that lead to attrition and to build a model to predict attrition. They are also interested in identifying some interesting trends between Job Roles as well as building a model to predict Salaries.</p>
-<p>In addition to the analysis below, please check out our presentation in this <a href="https://youtu.be/vKZZ-pE8uhU">video</a> </p>
 <p>To start the exploration we will load the data and perform univariate analysis</p>
 <pre class="r"><code>DDS = read.csv(&quot;/Users/rickfontenot/Dropbox/SMU/GitHub/SMU/DS6306/CaseStudy2/CaseStudy2-data.csv&quot;, header = TRUE)
 
@@ -694,26 +577,26 @@ confusionMatrix(table(predict(model,testDDS[,features]),testDDS$Attrition))</cod
 ## 
 ##      
 ##        No Yes
-##   No  188  16
-##   Yes  31  26
+##   No  195  16
+##   Yes  27  23
 ##                                           
-##                Accuracy : 0.8199          
-##                  95% CI : (0.7678, 0.8646)
-##     No Information Rate : 0.8391          
-##     P-Value [Acc &gt; NIR] : 0.82369         
+##                Accuracy : 0.8352          
+##                  95% CI : (0.7846, 0.8781)
+##     No Information Rate : 0.8506          
+##     P-Value [Acc &gt; NIR] : 0.7850          
 ##                                           
-##                   Kappa : 0.4173          
+##                   Kappa : 0.4194          
 ##                                           
-##  Mcnemar&#39;s Test P-Value : 0.04114         
+##  Mcnemar&#39;s Test P-Value : 0.1273          
 ##                                           
-##             Sensitivity : 0.8584          
-##             Specificity : 0.6190          
-##          Pos Pred Value : 0.9216          
-##          Neg Pred Value : 0.4561          
-##              Prevalence : 0.8391          
-##          Detection Rate : 0.7203          
-##    Detection Prevalence : 0.7816          
-##       Balanced Accuracy : 0.7387          
+##             Sensitivity : 0.8784          
+##             Specificity : 0.5897          
+##          Pos Pred Value : 0.9242          
+##          Neg Pred Value : 0.4600          
+##              Prevalence : 0.8506          
+##          Detection Rate : 0.7471          
+##    Detection Prevalence : 0.8084          
+##       Balanced Accuracy : 0.7341          
 ##                                           
 ##        &#39;Positive&#39; Class : No              
 ## </code></pre>
@@ -727,26 +610,26 @@ confusionMatrix(table(predict(model,testDDS[,features2]),testDDS$Attrition))</co
 ## 
 ##      
 ##        No Yes
-##   No  186  16
-##   Yes  33  26
+##   No  193  16
+##   Yes  29  23
 ##                                           
-##                Accuracy : 0.8123          
-##                  95% CI : (0.7595, 0.8578)
-##     No Information Rate : 0.8391          
-##     P-Value [Acc &gt; NIR] : 0.89499         
+##                Accuracy : 0.8276          
+##                  95% CI : (0.7762, 0.8714)
+##     No Information Rate : 0.8506          
+##     P-Value [Acc &gt; NIR] : 0.86951         
 ##                                           
-##                   Kappa : 0.4025          
+##                   Kappa : 0.4037          
 ##                                           
-##  Mcnemar&#39;s Test P-Value : 0.02227         
+##  Mcnemar&#39;s Test P-Value : 0.07364         
 ##                                           
-##             Sensitivity : 0.8493          
-##             Specificity : 0.6190          
-##          Pos Pred Value : 0.9208          
-##          Neg Pred Value : 0.4407          
-##              Prevalence : 0.8391          
-##          Detection Rate : 0.7126          
-##    Detection Prevalence : 0.7739          
-##       Balanced Accuracy : 0.7342          
+##             Sensitivity : 0.8694          
+##             Specificity : 0.5897          
+##          Pos Pred Value : 0.9234          
+##          Neg Pred Value : 0.4423          
+##              Prevalence : 0.8506          
+##          Detection Rate : 0.7395          
+##    Detection Prevalence : 0.8008          
+##       Balanced Accuracy : 0.7296          
 ##                                           
 ##        &#39;Positive&#39; Class : No              
 ## </code></pre>
@@ -760,28 +643,28 @@ confusionMatrix(table(predict(model,testDDS[,features3]),testDDS$Attrition))</co
 ## 
 ##      
 ##        No Yes
-##   No  190  17
-##   Yes  29  25
-##                                         
-##                Accuracy : 0.8238        
-##                  95% CI : (0.772, 0.868)
-##     No Information Rate : 0.8391        
-##     P-Value [Acc &gt; NIR] : 0.7782        
-##                                         
-##                   Kappa : 0.4149        
-##                                         
-##  Mcnemar&#39;s Test P-Value : 0.1048        
-##                                         
-##             Sensitivity : 0.8676        
-##             Specificity : 0.5952        
-##          Pos Pred Value : 0.9179        
-##          Neg Pred Value : 0.4630        
-##              Prevalence : 0.8391        
-##          Detection Rate : 0.7280        
-##    Detection Prevalence : 0.7931        
-##       Balanced Accuracy : 0.7314        
-##                                         
-##        &#39;Positive&#39; Class : No            
+##   No  196  17
+##   Yes  26  22
+##                                           
+##                Accuracy : 0.8352          
+##                  95% CI : (0.7846, 0.8781)
+##     No Information Rate : 0.8506          
+##     P-Value [Acc &gt; NIR] : 0.7850          
+##                                           
+##                   Kappa : 0.4082          
+##                                           
+##  Mcnemar&#39;s Test P-Value : 0.2225          
+##                                           
+##             Sensitivity : 0.8829          
+##             Specificity : 0.5641          
+##          Pos Pred Value : 0.9202          
+##          Neg Pred Value : 0.4583          
+##              Prevalence : 0.8506          
+##          Detection Rate : 0.7510          
+##    Detection Prevalence : 0.8161          
+##       Balanced Accuracy : 0.7235          
+##                                           
+##        &#39;Positive&#39; Class : No              
 ## </code></pre>
 <pre class="r"><code>#Model 4 Scale all numerical values
 DDS_scaled &lt;- DDS_transformed %&gt;% mutate_if(is.numeric,scale)
@@ -798,26 +681,26 @@ confusionMatrix(table(predict(model,testDDS_scaled[,features4]),testDDS_scaled$A
 ## 
 ##      
 ##        No Yes
-##   No  182  26
-##   Yes  30  23
+##   No  198  15
+##   Yes  23  25
 ##                                           
-##                Accuracy : 0.7854          
-##                  95% CI : (0.7306, 0.8337)
-##     No Information Rate : 0.8123          
-##     P-Value [Acc &gt; NIR] : 0.8816          
+##                Accuracy : 0.8544          
+##                  95% CI : (0.8057, 0.8949)
+##     No Information Rate : 0.8467          
+##     P-Value [Acc &gt; NIR] : 0.4056          
 ##                                           
-##                   Kappa : 0.3179          
+##                   Kappa : 0.4815          
 ##                                           
-##  Mcnemar&#39;s Test P-Value : 0.6885          
+##  Mcnemar&#39;s Test P-Value : 0.2561          
 ##                                           
-##             Sensitivity : 0.8585          
-##             Specificity : 0.4694          
-##          Pos Pred Value : 0.8750          
-##          Neg Pred Value : 0.4340          
-##              Prevalence : 0.8123          
-##          Detection Rate : 0.6973          
-##    Detection Prevalence : 0.7969          
-##       Balanced Accuracy : 0.6639          
+##             Sensitivity : 0.8959          
+##             Specificity : 0.6250          
+##          Pos Pred Value : 0.9296          
+##          Neg Pred Value : 0.5208          
+##              Prevalence : 0.8467          
+##          Detection Rate : 0.7586          
+##    Detection Prevalence : 0.8161          
+##       Balanced Accuracy : 0.7605          
 ##                                           
 ##        &#39;Positive&#39; Class : No              
 ## </code></pre>
@@ -831,28 +714,28 @@ confusionMatrix(table(predict(model,testDDS[,features]),testDDS$Attrition))</cod
 ## 
 ##      
 ##        No Yes
-##   No  192  17
-##   Yes  27  25
-##                                           
-##                Accuracy : 0.8314          
-##                  95% CI : (0.7804, 0.8748)
-##     No Information Rate : 0.8391          
-##     P-Value [Acc &gt; NIR] : 0.6688          
-##                                           
-##                   Kappa : 0.4305          
-##                                           
-##  Mcnemar&#39;s Test P-Value : 0.1748          
-##                                           
-##             Sensitivity : 0.8767          
-##             Specificity : 0.5952          
-##          Pos Pred Value : 0.9187          
-##          Neg Pred Value : 0.4808          
-##              Prevalence : 0.8391          
-##          Detection Rate : 0.7356          
-##    Detection Prevalence : 0.8008          
-##       Balanced Accuracy : 0.7360          
-##                                           
-##        &#39;Positive&#39; Class : No              
+##   No  198  17
+##   Yes  24  22
+##                                          
+##                Accuracy : 0.8429         
+##                  95% CI : (0.793, 0.8849)
+##     No Information Rate : 0.8506         
+##     P-Value [Acc &gt; NIR] : 0.6738         
+##                                          
+##                   Kappa : 0.4246         
+##                                          
+##  Mcnemar&#39;s Test P-Value : 0.3487         
+##                                          
+##             Sensitivity : 0.8919         
+##             Specificity : 0.5641         
+##          Pos Pred Value : 0.9209         
+##          Neg Pred Value : 0.4783         
+##              Prevalence : 0.8506         
+##          Detection Rate : 0.7586         
+##    Detection Prevalence : 0.8238         
+##       Balanced Accuracy : 0.7280         
+##                                          
+##        &#39;Positive&#39; Class : No             
 ## </code></pre>
 <pre class="r"><code>#Model 6: Remove YearsWithCurrManager &amp; YearsAtCompany since correlated with logYearsInCurrentRole which has lowest p-value
 features6=c(&quot;OverTime&quot;,&quot;JobRoleBin&quot;,&quot;logMonthlyIncome&quot;,&quot;logTotalWorkingYears&quot;,&quot;MaritalStatus&quot;,&quot;logYearsInCurrentRole&quot;,&quot;JobLevel&quot;,&quot;JobInvolvement&quot;,&quot;StockOptionLevel&quot;,&quot;Age&quot;,&quot;JobSatisfaction&quot;,&quot;Department&quot;,&quot;WorkLifeBalance&quot;,&quot;EnvironmentSatisfaction&quot;,&quot;BusinessTravel&quot;,&quot;logDistanceFromHome&quot;)
@@ -864,28 +747,28 @@ confusionMatrix(table(predict(model,testDDS[,features6]),testDDS$Attrition))</co
 ## 
 ##      
 ##        No Yes
-##   No  192  17
-##   Yes  27  25
-##                                           
-##                Accuracy : 0.8314          
-##                  95% CI : (0.7804, 0.8748)
-##     No Information Rate : 0.8391          
-##     P-Value [Acc &gt; NIR] : 0.6688          
-##                                           
-##                   Kappa : 0.4305          
-##                                           
-##  Mcnemar&#39;s Test P-Value : 0.1748          
-##                                           
-##             Sensitivity : 0.8767          
-##             Specificity : 0.5952          
-##          Pos Pred Value : 0.9187          
-##          Neg Pred Value : 0.4808          
-##              Prevalence : 0.8391          
-##          Detection Rate : 0.7356          
-##    Detection Prevalence : 0.8008          
-##       Balanced Accuracy : 0.7360          
-##                                           
-##        &#39;Positive&#39; Class : No              
+##   No  198  17
+##   Yes  24  22
+##                                          
+##                Accuracy : 0.8429         
+##                  95% CI : (0.793, 0.8849)
+##     No Information Rate : 0.8506         
+##     P-Value [Acc &gt; NIR] : 0.6738         
+##                                          
+##                   Kappa : 0.4246         
+##                                          
+##  Mcnemar&#39;s Test P-Value : 0.3487         
+##                                          
+##             Sensitivity : 0.8919         
+##             Specificity : 0.5641         
+##          Pos Pred Value : 0.9209         
+##          Neg Pred Value : 0.4783         
+##              Prevalence : 0.8506         
+##          Detection Rate : 0.7586         
+##    Detection Prevalence : 0.8238         
+##       Balanced Accuracy : 0.7280         
+##                                          
+##        &#39;Positive&#39; Class : No             
 ## </code></pre>
 <pre class="r"><code>#Model 7: Remove YearsWithCurrManager &amp; logYearsInCurrentRole since correlated with YearsAtCompany which has highest variable importance
 features7=c(&quot;OverTime&quot;,&quot;JobRoleBin&quot;,&quot;logMonthlyIncome&quot;,&quot;logTotalWorkingYears&quot;,&quot;MaritalStatus&quot;,&quot;JobLevel&quot;,&quot;JobInvolvement&quot;,&quot;StockOptionLevel&quot;,&quot;Age&quot;,&quot;YearsAtCompany&quot;,&quot;JobSatisfaction&quot;,&quot;Department&quot;,&quot;WorkLifeBalance&quot;,&quot;EnvironmentSatisfaction&quot;,&quot;BusinessTravel&quot;,&quot;logDistanceFromHome&quot;)
@@ -897,28 +780,28 @@ confusionMatrix(table(predict(model,testDDS[,features7]),testDDS$Attrition))</co
 ## 
 ##      
 ##        No Yes
-##   No  193  18
-##   Yes  26  24
-##                                           
-##                Accuracy : 0.8314          
-##                  95% CI : (0.7804, 0.8748)
-##     No Information Rate : 0.8391          
-##     P-Value [Acc &gt; NIR] : 0.6688          
-##                                           
-##                   Kappa : 0.4204          
-##                                           
-##  Mcnemar&#39;s Test P-Value : 0.2913          
-##                                           
-##             Sensitivity : 0.8813          
-##             Specificity : 0.5714          
-##          Pos Pred Value : 0.9147          
-##          Neg Pred Value : 0.4800          
-##              Prevalence : 0.8391          
-##          Detection Rate : 0.7395          
-##    Detection Prevalence : 0.8084          
-##       Balanced Accuracy : 0.7264          
-##                                           
-##        &#39;Positive&#39; Class : No              
+##   No  198  17
+##   Yes  24  22
+##                                          
+##                Accuracy : 0.8429         
+##                  95% CI : (0.793, 0.8849)
+##     No Information Rate : 0.8506         
+##     P-Value [Acc &gt; NIR] : 0.6738         
+##                                          
+##                   Kappa : 0.4246         
+##                                          
+##  Mcnemar&#39;s Test P-Value : 0.3487         
+##                                          
+##             Sensitivity : 0.8919         
+##             Specificity : 0.5641         
+##          Pos Pred Value : 0.9209         
+##          Neg Pred Value : 0.4783         
+##              Prevalence : 0.8506         
+##          Detection Rate : 0.7586         
+##    Detection Prevalence : 0.8238         
+##       Balanced Accuracy : 0.7280         
+##                                          
+##        &#39;Positive&#39; Class : No             
 ## </code></pre>
 <pre class="r"><code>#Model 8 Remove logTotalWorkingYears since correlated with logMonthlyIncome
 features8=c(&quot;OverTime&quot;,&quot;JobRoleBin&quot;,&quot;logMonthlyIncome&quot;,&quot;MaritalStatus&quot;,&quot;logYearsInCurrentRole&quot;,&quot;JobLevel&quot;,&quot;JobInvolvement&quot;,&quot;YearsWithCurrManager&quot;,&quot;StockOptionLevel&quot;,&quot;Age&quot;,&quot;YearsAtCompany&quot;,&quot;JobSatisfaction&quot;,&quot;Department&quot;,&quot;WorkLifeBalance&quot;,&quot;EnvironmentSatisfaction&quot;,&quot;BusinessTravel&quot;,&quot;logDistanceFromHome&quot;)
@@ -930,28 +813,28 @@ confusionMatrix(table(predict(model,testDDS[,features8]),testDDS$Attrition))</co
 ## 
 ##      
 ##        No Yes
-##   No  194  15
-##   Yes  25  27
-##                                           
-##                Accuracy : 0.8467          
-##                  95% CI : (0.7972, 0.8882)
-##     No Information Rate : 0.8391          
-##     P-Value [Acc &gt; NIR] : 0.4072          
-##                                           
-##                   Kappa : 0.4823          
-##                                           
-##  Mcnemar&#39;s Test P-Value : 0.1547          
-##                                           
-##             Sensitivity : 0.8858          
-##             Specificity : 0.6429          
-##          Pos Pred Value : 0.9282          
-##          Neg Pred Value : 0.5192          
-##              Prevalence : 0.8391          
-##          Detection Rate : 0.7433          
-##    Detection Prevalence : 0.8008          
-##       Balanced Accuracy : 0.7644          
-##                                           
-##        &#39;Positive&#39; Class : No              
+##   No  190  14
+##   Yes  32  25
+##                                         
+##                Accuracy : 0.8238        
+##                  95% CI : (0.772, 0.868)
+##     No Information Rate : 0.8506        
+##     P-Value [Acc &gt; NIR] : 0.90146       
+##                                         
+##                   Kappa : 0.4175        
+##                                         
+##  Mcnemar&#39;s Test P-Value : 0.01219       
+##                                         
+##             Sensitivity : 0.8559        
+##             Specificity : 0.6410        
+##          Pos Pred Value : 0.9314        
+##          Neg Pred Value : 0.4386        
+##              Prevalence : 0.8506        
+##          Detection Rate : 0.7280        
+##    Detection Prevalence : 0.7816        
+##       Balanced Accuracy : 0.7484        
+##                                         
+##        &#39;Positive&#39; Class : No            
 ## </code></pre>
 <pre class="r"><code>#Model 9 Combine improvements from Models 5,7 &amp; 8: Remove JobLevel, YearsWithCurrManager, logYearsInCurrentRole, logTotalWorkingYears
 features9=c(&quot;OverTime&quot;,&quot;JobRoleBin&quot;,&quot;logMonthlyIncome&quot;,&quot;MaritalStatus&quot;,&quot;JobInvolvement&quot;,&quot;StockOptionLevel&quot;,&quot;Age&quot;,&quot;YearsAtCompany&quot;,&quot;JobSatisfaction&quot;,&quot;Department&quot;,&quot;WorkLifeBalance&quot;,&quot;EnvironmentSatisfaction&quot;,&quot;BusinessTravel&quot;,&quot;logDistanceFromHome&quot;)
@@ -963,26 +846,26 @@ confusionMatrix(table(predict(model,testDDS[,features9]),testDDS$Attrition))</co
 ## 
 ##      
 ##        No Yes
-##   No  208  24
-##   Yes  11  18
+##   No  207  19
+##   Yes  15  20
 ##                                           
-##                Accuracy : 0.8659          
-##                  95% CI : (0.8185, 0.9048)
-##     No Information Rate : 0.8391          
-##     P-Value [Acc &gt; NIR] : 0.13575         
+##                Accuracy : 0.8697          
+##                  95% CI : (0.8227, 0.9081)
+##     No Information Rate : 0.8506          
+##     P-Value [Acc &gt; NIR] : 0.2196          
 ##                                           
-##                   Kappa : 0.4324          
+##                   Kappa : 0.4649          
 ##                                           
-##  Mcnemar&#39;s Test P-Value : 0.04252         
+##  Mcnemar&#39;s Test P-Value : 0.6069          
 ##                                           
-##             Sensitivity : 0.9498          
-##             Specificity : 0.4286          
-##          Pos Pred Value : 0.8966          
-##          Neg Pred Value : 0.6207          
-##              Prevalence : 0.8391          
-##          Detection Rate : 0.7969          
-##    Detection Prevalence : 0.8889          
-##       Balanced Accuracy : 0.6892          
+##             Sensitivity : 0.9324          
+##             Specificity : 0.5128          
+##          Pos Pred Value : 0.9159          
+##          Neg Pred Value : 0.5714          
+##              Prevalence : 0.8506          
+##          Detection Rate : 0.7931          
+##    Detection Prevalence : 0.8659          
+##       Balanced Accuracy : 0.7226          
 ##                                           
 ##        &#39;Positive&#39; Class : No              
 ## </code></pre>
@@ -996,26 +879,26 @@ confusionMatrix(table(predict(model10,testDDS[,features10]),testDDS$Attrition))<
 ## 
 ##      
 ##        No Yes
-##   No  202  17
-##   Yes  17  25
+##   No  197  14
+##   Yes  25  25
 ##                                           
-##                Accuracy : 0.8697          
-##                  95% CI : (0.8227, 0.9081)
-##     No Information Rate : 0.8391          
-##     P-Value [Acc &gt; NIR] : 0.1009          
+##                Accuracy : 0.8506          
+##                  95% CI : (0.8014, 0.8915)
+##     No Information Rate : 0.8506          
+##     P-Value [Acc &gt; NIR] : 0.5426          
 ##                                           
-##                   Kappa : 0.5176          
+##                   Kappa : 0.4734          
 ##                                           
-##  Mcnemar&#39;s Test P-Value : 1.0000          
+##  Mcnemar&#39;s Test P-Value : 0.1093          
 ##                                           
-##             Sensitivity : 0.9224          
-##             Specificity : 0.5952          
-##          Pos Pred Value : 0.9224          
-##          Neg Pred Value : 0.5952          
-##              Prevalence : 0.8391          
-##          Detection Rate : 0.7739          
-##    Detection Prevalence : 0.8391          
-##       Balanced Accuracy : 0.7588          
+##             Sensitivity : 0.8874          
+##             Specificity : 0.6410          
+##          Pos Pred Value : 0.9336          
+##          Neg Pred Value : 0.5000          
+##              Prevalence : 0.8506          
+##          Detection Rate : 0.7548          
+##    Detection Prevalence : 0.8084          
+##       Balanced Accuracy : 0.7642          
 ##                                           
 ##        &#39;Positive&#39; Class : No              
 ## </code></pre>
@@ -1029,26 +912,26 @@ confusionMatrix(table(predict(model,testDDS[,features11]),testDDS$Attrition))</c
 ## 
 ##      
 ##        No Yes
-##   No  200  21
-##   Yes  19  21
+##   No  201  16
+##   Yes  21  23
 ##                                           
-##                Accuracy : 0.8467          
-##                  95% CI : (0.7972, 0.8882)
-##     No Information Rate : 0.8391          
-##     P-Value [Acc &gt; NIR] : 0.4072          
+##                Accuracy : 0.8582          
+##                  95% CI : (0.8099, 0.8982)
+##     No Information Rate : 0.8506          
+##     P-Value [Acc &gt; NIR] : 0.4047          
 ##                                           
-##                   Kappa : 0.4214          
+##                   Kappa : 0.4703          
 ##                                           
-##  Mcnemar&#39;s Test P-Value : 0.8744          
+##  Mcnemar&#39;s Test P-Value : 0.5108          
 ##                                           
-##             Sensitivity : 0.9132          
-##             Specificity : 0.5000          
-##          Pos Pred Value : 0.9050          
-##          Neg Pred Value : 0.5250          
-##              Prevalence : 0.8391          
-##          Detection Rate : 0.7663          
-##    Detection Prevalence : 0.8467          
-##       Balanced Accuracy : 0.7066          
+##             Sensitivity : 0.9054          
+##             Specificity : 0.5897          
+##          Pos Pred Value : 0.9263          
+##          Neg Pred Value : 0.5227          
+##              Prevalence : 0.8506          
+##          Detection Rate : 0.7701          
+##    Detection Prevalence : 0.8314          
+##       Balanced Accuracy : 0.7476          
 ##                                           
 ##        &#39;Positive&#39; Class : No              
 ## </code></pre>
@@ -1062,26 +945,26 @@ confusionMatrix(table(predict(model,testDDS[,features11]),testDDS$Attrition))</c
 ## 
 ##      
 ##        No Yes
-##   No  196  20
-##   Yes  23  22
+##   No  205  20
+##   Yes  17  19
 ##                                           
-##                Accuracy : 0.8352          
-##                  95% CI : (0.7846, 0.8781)
-##     No Information Rate : 0.8391          
-##     P-Value [Acc &gt; NIR] : 0.6066          
+##                Accuracy : 0.8582          
+##                  95% CI : (0.8099, 0.8982)
+##     No Information Rate : 0.8506          
+##     P-Value [Acc &gt; NIR] : 0.4047          
 ##                                           
-##                   Kappa : 0.407           
+##                   Kappa : 0.424           
 ##                                           
-##  Mcnemar&#39;s Test P-Value : 0.7604          
+##  Mcnemar&#39;s Test P-Value : 0.7423          
 ##                                           
-##             Sensitivity : 0.8950          
-##             Specificity : 0.5238          
-##          Pos Pred Value : 0.9074          
-##          Neg Pred Value : 0.4889          
-##              Prevalence : 0.8391          
-##          Detection Rate : 0.7510          
-##    Detection Prevalence : 0.8276          
-##       Balanced Accuracy : 0.7094          
+##             Sensitivity : 0.9234          
+##             Specificity : 0.4872          
+##          Pos Pred Value : 0.9111          
+##          Neg Pred Value : 0.5278          
+##              Prevalence : 0.8506          
+##          Detection Rate : 0.7854          
+##    Detection Prevalence : 0.8621          
+##       Balanced Accuracy : 0.7053          
 ##                                           
 ##        &#39;Positive&#39; Class : No              
 ## </code></pre>
@@ -1122,8 +1005,8 @@ Competition_transformed[sapply(Competition_transformed, is.character)] &lt;- lap
 Competition_transformed[&quot;Attrition&quot;]&lt;-predict(model10,Competition_transformed[,features10])
 summary(Competition_transformed[&quot;Attrition&quot;])</code></pre>
 <pre><code>##  Attrition
-##  No :267  
-##  Yes: 33</code></pre>
+##  No :260  
+##  Yes: 40</code></pre>
 <pre class="r"><code>#Predictions: No=268 Yes=32, AttritionRate = 10.67%
 
 #Reoder Columns to have ID and Attrition Prediction first
@@ -1164,94 +1047,94 @@ summary(model)</code></pre>
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -2914.0  -612.8   -59.4   570.4  4022.6 
+## -2921.2  -591.3   -71.3   536.0  3650.6 
 ## 
 ## Coefficients: (2 not defined because of singularities)
 ##                                    Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)                       3.293e+03  8.576e+02   3.840 0.000138 ***
-## Age                              -5.898e+00  6.942e+00  -0.850 0.395905    
-## AttritionYes                     -1.063e+02  1.428e+02  -0.744 0.456932    
-## BusinessTravelTravel_Frequently   2.011e+02  1.698e+02   1.184 0.236902    
-## BusinessTravelTravel_Rarely       3.734e+02  1.442e+02   2.589 0.009876 ** 
-## DailyRate                         2.611e-01  1.103e-01   2.367 0.018287 *  
-## DepartmentResearch &amp; Development  2.240e+01  5.530e+02   0.041 0.967700    
-## DepartmentSales                  -4.063e+02  5.524e+02  -0.735 0.462385    
-## DistanceFromHome                 -5.645e+00  5.394e+00  -1.047 0.295780    
-## Education2                       -3.233e+01  1.593e+02  -0.203 0.839256    
-## Education3                       -3.236e+00  1.471e+02  -0.022 0.982456    
-## Education4                        1.263e+02  1.605e+02   0.787 0.431708    
-## Education5                       -3.744e+02  2.902e+02  -1.290 0.197597    
-## EducationFieldLife Sciences       3.954e+02  4.346e+02   0.910 0.363295    
-## EducationFieldMarketing           2.874e+02  4.621e+02   0.622 0.534315    
-## EducationFieldMedical             3.181e+02  4.321e+02   0.736 0.461868    
-## EducationFieldOther               2.834e+02  4.600e+02   0.616 0.538170    
-## EducationFieldTechnical Degree    1.866e+02  4.472e+02   0.417 0.676700    
-## EnvironmentSatisfaction2         -2.916e+02  1.383e+02  -2.109 0.035431 *  
-## EnvironmentSatisfaction3         -9.825e+01  1.303e+02  -0.754 0.451094    
-## EnvironmentSatisfaction4         -1.446e+02  1.275e+02  -1.134 0.257439    
-## GenderMale                        1.137e+02  8.922e+01   1.275 0.202930    
-## HourlyRate                       -8.983e-01  2.174e+00  -0.413 0.679579    
-## JobInvolvement2                  -9.435e+01  1.999e+02  -0.472 0.637089    
-## JobInvolvement3                  -1.454e+02  1.946e+02  -0.747 0.455144    
-## JobInvolvement4                  -1.543e+02  2.378e+02  -0.649 0.516867    
-## JobLevel2                         1.753e+03  1.821e+02   9.624  &lt; 2e-16 ***
-## JobLevel3                         4.810e+03  2.433e+02  19.765  &lt; 2e-16 ***
-## JobLevel4                         8.363e+03  3.849e+02  21.726  &lt; 2e-16 ***
-## JobLevel5                         1.104e+04  4.714e+02  23.430  &lt; 2e-16 ***
-## JobRoleHuman Resources           -6.694e+02  6.084e+02  -1.100 0.271716    
-## JobRoleLaboratory Technician     -1.217e+03  2.257e+02  -5.392 1.05e-07 ***
-## JobRoleManager                    3.717e+03  3.995e+02   9.303  &lt; 2e-16 ***
-## JobRoleManufacturing Director     2.130e+02  2.096e+02   1.016 0.309875    
-## JobRoleResearch Director          3.698e+03  2.802e+02  13.197  &lt; 2e-16 ***
-## JobRoleResearch Scientist        -1.030e+03  2.317e+02  -4.445 1.07e-05 ***
-## JobRoleSales Executive            4.212e+02  4.468e+02   0.943 0.346296    
-## JobRoleSales Representative      -7.121e+02  4.975e+02  -1.431 0.152954    
-## JobSatisfaction2                 -8.417e+01  1.415e+02  -0.595 0.552122    
-## JobSatisfaction3                 -5.385e+01  1.274e+02  -0.423 0.672690    
-## JobSatisfaction4                 -4.053e+00  1.256e+02  -0.032 0.974276    
-## MaritalStatusMarried              2.228e+02  1.185e+02   1.881 0.060546 .  
-## MaritalStatusSingle               2.221e+02  1.850e+02   1.201 0.230281    
-## MonthlyRate                       4.313e-03  6.056e-03   0.712 0.476695    
-## NumCompaniesWorked1              -1.472e+02  1.372e+02  -1.073 0.283552    
-## NumCompaniesWorked2               2.223e+01  2.039e+02   0.109 0.913203    
-## NumCompaniesWorked3               1.351e+02  2.026e+02   0.667 0.505010    
-## NumCompaniesWorked4               5.405e+01  1.956e+02   0.276 0.782471    
-## NumCompaniesWorked5               6.580e+01  2.592e+02   0.254 0.799695    
-## NumCompaniesWorked6               7.039e+01  2.598e+02   0.271 0.786500    
-## NumCompaniesWorked7              -1.082e+02  2.254e+02  -0.480 0.631213    
-## NumCompaniesWorked8              -1.033e+02  2.984e+02  -0.346 0.729184    
-## NumCompaniesWorked9               1.704e+02  2.882e+02   0.591 0.554748    
-## OverTimeYes                       1.887e+02  1.019e+02   1.853 0.064468 .  
-## PercentSalaryHike                -4.666e+00  1.902e+01  -0.245 0.806270    
-## PerformanceRating4               -1.076e+02  1.928e+02  -0.558 0.577056    
-## RelationshipSatisfaction2         1.825e+02  1.420e+02   1.285 0.199221    
-## RelationshipSatisfaction3         1.237e+01  1.246e+02   0.099 0.920968    
-## RelationshipSatisfaction4         8.636e+01  1.241e+02   0.696 0.486910    
-## StockOptionLevel1                 5.395e+01  1.458e+02   0.370 0.711542    
-## StockOptionLevel2                 1.843e+01  1.947e+02   0.095 0.924622    
-## StockOptionLevel3                -1.232e+01  2.226e+02  -0.055 0.955882    
-## TotalWorkingYears                 2.748e+01  1.538e+01   1.787 0.074530 .  
-## TrainingTimesLastYear1           -3.094e+02  3.447e+02  -0.898 0.369781    
-## TrainingTimesLastYear2           -3.097e+02  2.622e+02  -1.181 0.237984    
-## TrainingTimesLastYear3           -2.593e+02  2.626e+02  -0.988 0.323836    
-## TrainingTimesLastYear4           -2.934e+02  2.909e+02  -1.009 0.313529    
-## TrainingTimesLastYear5           -2.280e+02  2.916e+02  -0.782 0.434631    
-## TrainingTimesLastYear6            4.200e+00  3.285e+02   0.013 0.989803    
-## WorkLifeBalance2                 -2.098e+01  2.045e+02  -0.103 0.918330    
-## WorkLifeBalance3                 -5.075e+00  1.916e+02  -0.026 0.978875    
-## WorkLifeBalance4                 -2.267e+02  2.212e+02  -1.025 0.305927    
-## YearsAtCompany                   -3.229e+00  1.752e+01  -0.184 0.853830    
-## YearsInCurrentRole                4.616e+01  2.060e+01   2.241 0.025430 *  
-## YearsSinceLastPromotion          -5.207e+00  1.867e+01  -0.279 0.780430    
-## YearsWithCurrManager             -2.248e+00  2.136e+01  -0.105 0.916249    
+## (Intercept)                       3.769e+03  8.440e+02   4.466 9.75e-06 ***
+## Age                              -1.496e+00  6.971e+00  -0.215   0.8302    
+## AttritionYes                     -6.141e+01  1.462e+02  -0.420   0.6745    
+## BusinessTravelTravel_Frequently   3.232e+02  1.726e+02   1.872   0.0617 .  
+## BusinessTravelTravel_Rarely       2.778e+02  1.516e+02   1.832   0.0675 .  
+## DailyRate                         2.568e-01  1.091e-01   2.354   0.0189 *  
+## DepartmentResearch &amp; Development -1.845e+02  5.561e+02  -0.332   0.7402    
+## DepartmentSales                  -9.063e+02  5.721e+02  -1.584   0.1137    
+## DistanceFromHome                 -9.103e+00  5.329e+00  -1.708   0.0882 .  
+## Education2                       -5.861e+01  1.523e+02  -0.385   0.7005    
+## Education3                       -8.043e+01  1.394e+02  -0.577   0.5642    
+## Education4                        1.193e+02  1.535e+02   0.777   0.4374    
+## Education5                       -5.294e+02  3.000e+02  -1.765   0.0782 .  
+## EducationFieldLife Sciences       2.217e+02  4.125e+02   0.537   0.5912    
+## EducationFieldMarketing           4.383e+02  4.413e+02   0.993   0.3210    
+## EducationFieldMedical             2.438e+02  4.116e+02   0.592   0.5539    
+## EducationFieldOther               2.465e+02  4.497e+02   0.548   0.5839    
+## EducationFieldTechnical Degree    3.092e+02  4.259e+02   0.726   0.4681    
+## EnvironmentSatisfaction2         -1.232e+02  1.379e+02  -0.893   0.3722    
+## EnvironmentSatisfaction3         -6.431e+01  1.255e+02  -0.512   0.6087    
+## EnvironmentSatisfaction4         -6.545e+01  1.277e+02  -0.513   0.6083    
+## GenderMale                        6.316e+01  8.745e+01   0.722   0.4705    
+## HourlyRate                       -2.597e+00  2.097e+00  -1.239   0.2160    
+## JobInvolvement2                  -1.308e+02  1.991e+02  -0.657   0.5115    
+## JobInvolvement3                  -6.995e+01  1.919e+02  -0.364   0.7157    
+## JobInvolvement4                   7.042e+01  2.361e+02   0.298   0.7656    
+## JobLevel2                         1.660e+03  1.753e+02   9.468  &lt; 2e-16 ***
+## JobLevel3                         4.839e+03  2.328e+02  20.790  &lt; 2e-16 ***
+## JobLevel4                         8.170e+03  3.678e+02  22.213  &lt; 2e-16 ***
+## JobLevel5                         1.091e+04  4.376e+02  24.935  &lt; 2e-16 ***
+## JobRoleHuman Resources           -1.055e+03  5.973e+02  -1.766   0.0779 .  
+## JobRoleLaboratory Technician     -1.217e+03  2.133e+02  -5.706 1.92e-08 ***
+## JobRoleManager                    3.802e+03  3.566e+02  10.662  &lt; 2e-16 ***
+## JobRoleManufacturing Director     4.084e+02  1.979e+02   2.063   0.0396 *  
+## JobRoleResearch Director          3.774e+03  2.800e+02  13.479  &lt; 2e-16 ***
+## JobRoleResearch Scientist        -9.632e+02  2.197e+02  -4.384 1.40e-05 ***
+## JobRoleSales Executive            6.667e+02  4.324e+02   1.542   0.1237    
+## JobRoleSales Representative      -7.483e+02  4.848e+02  -1.544   0.1233    
+## JobSatisfaction2                 -6.065e+01  1.410e+02  -0.430   0.6672    
+## JobSatisfaction3                  2.862e+01  1.233e+02   0.232   0.8166    
+## JobSatisfaction4                  1.825e+01  1.228e+02   0.149   0.8820    
+## MaritalStatusMarried              1.588e+02  1.174e+02   1.353   0.1766    
+## MaritalStatusSingle               3.835e+01  1.853e+02   0.207   0.8361    
+## MonthlyRate                      -4.855e-03  6.058e-03  -0.801   0.4232    
+## NumCompaniesWorked1              -1.621e+02  1.356e+02  -1.195   0.2325    
+## NumCompaniesWorked2               4.460e+01  2.023e+02   0.220   0.8256    
+## NumCompaniesWorked3               3.618e+02  1.966e+02   1.841   0.0662 .  
+## NumCompaniesWorked4               6.861e+01  2.000e+02   0.343   0.7316    
+## NumCompaniesWorked5               1.216e+02  2.395e+02   0.508   0.6118    
+## NumCompaniesWorked6               3.938e+01  2.459e+02   0.160   0.8728    
+## NumCompaniesWorked7              -1.987e+02  2.273e+02  -0.874   0.3825    
+## NumCompaniesWorked8               9.606e+01  2.766e+02   0.347   0.7285    
+## NumCompaniesWorked9              -7.871e+01  2.772e+02  -0.284   0.7766    
+## OverTimeYes                       9.268e+01  9.928e+01   0.933   0.3510    
+## PercentSalaryHike                 1.063e+01  1.845e+01   0.576   0.5646    
+## PerformanceRating4               -2.141e+02  1.892e+02  -1.132   0.2582    
+## RelationshipSatisfaction2         1.433e+01  1.427e+02   0.100   0.9200    
+## RelationshipSatisfaction3        -3.513e+01  1.236e+02  -0.284   0.7764    
+## RelationshipSatisfaction4        -6.694e+01  1.214e+02  -0.551   0.5817    
+## StockOptionLevel1                 3.268e+01  1.482e+02   0.220   0.8256    
+## StockOptionLevel2                -4.018e+01  1.986e+02  -0.202   0.8397    
+## StockOptionLevel3                -1.084e+02  2.214e+02  -0.490   0.6245    
+## TotalWorkingYears                 2.304e+01  1.456e+01   1.582   0.1142    
+## TrainingTimesLastYear1           -9.470e+01  3.085e+02  -0.307   0.7590    
+## TrainingTimesLastYear2           -3.022e+02  2.483e+02  -1.217   0.2241    
+## TrainingTimesLastYear3           -3.256e+02  2.506e+02  -1.300   0.1943    
+## TrainingTimesLastYear4           -4.214e+02  2.789e+02  -1.511   0.1315    
+## TrainingTimesLastYear5           -6.280e+01  2.795e+02  -0.225   0.8223    
+## TrainingTimesLastYear6           -4.126e+01  3.212e+02  -0.128   0.8978    
+## WorkLifeBalance2                  9.290e+01  2.059e+02   0.451   0.6521    
+## WorkLifeBalance3                  4.291e+01  1.938e+02   0.221   0.8248    
+## WorkLifeBalance4                 -2.408e+02  2.267e+02  -1.062   0.2887    
+## YearsAtCompany                    2.714e+00  1.712e+01   0.159   0.8741    
+## YearsInCurrentRole                3.292e+01  2.039e+01   1.615   0.1070    
+## YearsSinceLastPromotion           4.289e+01  1.826e+01   2.348   0.0192 *  
+## YearsWithCurrManager             -4.321e+01  2.016e+01  -2.143   0.0325 *  
 ## JobRoleBinOther                          NA         NA      NA       NA    
 ## JobRoleBinSalesRep                       NA         NA      NA       NA    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 1017 on 533 degrees of freedom
-## Multiple R-squared:  0.9543, Adjusted R-squared:  0.9478 
-## F-statistic: 148.3 on 75 and 533 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 1006 on 533 degrees of freedom
+## Multiple R-squared:  0.9562, Adjusted R-squared:   0.95 
+## F-statistic: 155.2 on 75 and 533 DF,  p-value: &lt; 2.2e-16</code></pre>
 <pre class="r"><code>#Variable Selection Methods
 
 #Forward step selection 8 parameters included, RMSE = 955, Adj. R2=0.9572
@@ -1263,19 +1146,23 @@ step.forward</code></pre>
 ##         Variable                                 Adj.                                             
 ## Step            Entered            R-Square    R-Square      C(p)         AIC          RMSE       
 ## ----------------------------------------------------------------------------------------------
-##    1    JobLevel                     0.9186      0.9181    343.6225    10444.6863    1274.8800    
-##    2    JobRole                      0.9474      0.9463     10.3098    10195.0766    1031.9482    
-##    3    TotalWorkingYears            0.9490      0.9479     -6.2378    10178.3751    1017.0781    
-##    4    BusinessTravel               0.9500      0.9488    -16.7861    10169.3889    1007.9872    
-##    5    YearsInCurrentRole           0.9504      0.9490    -18.4920    10167.5002    1005.6224    
-##    6    DailyRate                    0.9507      0.9493    -20.1553    10165.6315    1003.2810    
-##    7    OverTime                     0.9509      0.9494    -20.7162    10164.9124    1001.8918    
-##    8    EnvironmentSatisfaction      0.9513      0.9496    -23.7096    10165.5753    1000.0570    
-##    9    Gender                       0.9515      0.9497    -23.4910    10165.6599     999.3371    
-##   10    MaritalStatus                0.9518      0.9498    -24.6383    10166.2611     998.2574    
-##   11    PerformanceRating            0.9519      0.9498    -24.1650    10166.6055     997.7560    
-##   12    DistanceFromHome             0.9520      0.9499    -23.5838    10167.0629     997.3489    
-##   13    YearsAtCompany               0.9521      0.9499    -22.8247    10167.7105     997.0991    
+##    1    JobLevel                     0.9204      0.9198    364.3878    10444.1134    1274.2805    
+##    2    JobRole                      0.9489      0.9479     18.4409    10189.3374    1027.0971    
+##    3    TotalWorkingYears            0.9505      0.9495      1.0579    10172.0399    1011.8016    
+##    4    DailyRate                    0.9509      0.9498     -1.6213    10169.2883    1008.7102    
+##    5    BusinessTravel               0.9515      0.9501     -6.0846    10166.6633    1004.9317    
+##    6    Department                   0.9518      0.9504     -8.8197    10165.7637    1002.5923    
+##    7    YearsSinceLastPromotion      0.9520      0.9505     -9.2441    10165.2396    1001.3657    
+##    8    YearsWithCurrManager         0.9523      0.9507    -10.7308    10163.5913     999.2194    
+##    9    Education                    0.9529      0.9510    -15.9713    10163.9444     996.3605    
+##   10    YearsInCurrentRole           0.9531      0.9511    -16.3683    10163.3916     995.1268    
+##   11    DistanceFromHome             0.9533      0.9512    -16.0486    10163.5957     994.5139    
+##   12    PerformanceRating            0.9534      0.9512    -15.5083    10164.0313     994.0917    
+##   13    WorkLifeBalance              0.9537      0.9513    -17.4181    10165.8209     993.2288    
+##   14    NumCompaniesWorked           0.9546      0.9515    -26.6050    10171.6110     991.0681    
+##   15    HourlyRate                   0.9547      0.9515    -25.9201    10172.1593     990.7586    
+##   16    TrainingTimesLastYear        0.9554      0.9517    -31.6177    10175.5927     989.0524    
+##   17    MaritalStatus                0.9556      0.9518    -32.1767    10176.7179     988.4812    
 ## ----------------------------------------------------------------------------------------------</code></pre>
 <pre class="r"><code>#Backward step selection 18 parameters removed (30-18=12 remain), RMSE = 952, Adj. R2=0.9575
 step.backward &lt;- ols_step_backward_p(model)
@@ -1287,40 +1174,36 @@ step.backward</code></pre>
 ##         Variable                                  Adj.                                             
 ## Step            Removed             R-Square    R-Square      C(p)         AIC          RMSE       
 ## -----------------------------------------------------------------------------------------------
-##    1    StockOptionLevel              0.9542      0.9481    -15.7610    10233.8772    1014.6579    
-##    2    YearsWithCurrManager          0.9542      0.9482    -17.7514    10231.8882    1013.7219    
-##    3    JobSatisfaction               0.9542      0.9484    -19.1970    10226.5210    1011.4274    
-##    4    NumCompaniesWorked            0.9538      0.9489    -16.7445    10213.5797    1007.2776    
-##    5    JobInvolvement                0.9538      0.9491    -18.0952    10208.3138    1005.1424    
-##    6    EducationField                0.9535      0.9493    -17.5656    10201.1657    1002.9664    
-##    7    PercentSalaryHike             0.9535      0.9494    -19.5386    10199.1962    1002.0924    
-##    8    YearsSinceLastPromotion       0.9535      0.9495    -21.4616    10197.2827    1001.2668    
-##    9    TrainingTimesLastYear         0.9533      0.9497    -20.1207    10189.0283     999.0035    
-##   10    HourlyRate                    0.9532      0.9498    -21.9377    10187.2328     998.2882    
-##   11    Department                    0.9531      0.9498    -22.7954    10184.5078     997.5728    
-##   12    MonthlyRate                   0.9531      0.9499    -24.2706    10183.0926     997.1745    
-##   13    Age                           0.9531      0.9499    -25.7898    10181.6279     996.7374    
-##   14    RelationshipSatisfaction      0.9528      0.9499    -24.9721    10178.7558     996.6809    
-##   15    WorkLifeBalance               0.9525      0.9499    -23.8018    10176.2558     996.9427    
-##   16    Attrition                     0.9525      0.9499    -25.0076    10175.1296     996.7932    
-##   17    Education                     0.9521      0.9499    -22.8247    10171.7105     997.0991    
+##    1    JobSatisfaction               0.9562      0.9503    -15.4906    10220.4258    1003.5138    
+##    2    RelationshipSatisfaction      0.9561      0.9505    -16.8916    10215.1093    1001.2789    
+##    3    YearsAtCompany                0.9561      0.9506    -18.8716    10213.1320    1000.3700    
+##    4    StockOptionLevel              0.9561      0.9508    -20.1398    10207.9659     998.2860    
+##    5    EducationField                0.9559      0.9511    -20.1206    10200.2606     995.5953    
+##    6    Age                           0.9559      0.9512    -22.1180    10198.2636     994.6905    
+##    7    EnvironmentSatisfaction       0.9558      0.9513    -23.3256    10193.1617     992.7157    
+##    8    JobInvolvement                0.9557      0.9515    -24.3803    10188.2314     990.8989    
+##    9    Attrition                     0.9557      0.9516    -26.2626    10186.3645     990.1156    
+##   10    PercentSalaryHike             0.9557      0.9517    -27.9430    10184.7257     989.5198    
+##   11    Gender                        0.9557      0.9517    -29.4647    10183.2659     989.0713    
+##   12    MonthlyRate                   0.9556      0.9517    -30.8900    10181.9142     988.7123    
+##   13    OverTime                      0.9556      0.9518    -32.1767    10180.7179     988.4812    
 ## -----------------------------------------------------------------------------------------------</code></pre>
 <pre class="r"><code>#Stepwise selection 6 parameters, RMSE=957, Adj. R2=0.957
 stepwise &lt;- ols_step_both_p(model)
 stepwise</code></pre>
 <pre><code>## 
-##                                      Stepwise Selection Summary                                       
-## -----------------------------------------------------------------------------------------------------
-##                                Added/                   Adj.                                             
-## Step         Variable         Removed     R-Square    R-Square      C(p)         AIC          RMSE       
-## -----------------------------------------------------------------------------------------------------
-##    1         JobLevel         addition       0.919       0.918    343.6220    10444.6863    1274.8800    
-##    2         JobRole          addition       0.947       0.946     10.3100    10195.0766    1031.9482    
-##    3    TotalWorkingYears     addition       0.949       0.948     -6.2380    10178.3751    1017.0781    
-##    4      BusinessTravel      addition       0.950       0.949    -16.7860    10169.3889    1007.9872    
-##    5    YearsInCurrentRole    addition       0.950       0.949    -18.4920    10167.5002    1005.6224    
-##    6        DailyRate         addition       0.951       0.949    -20.1550    10165.6315    1003.2810    
-## -----------------------------------------------------------------------------------------------------</code></pre>
+##                                      Stepwise Selection Summary                                      
+## ----------------------------------------------------------------------------------------------------
+##                               Added/                   Adj.                                             
+## Step        Variable         Removed     R-Square    R-Square      C(p)         AIC          RMSE       
+## ----------------------------------------------------------------------------------------------------
+##    1        JobLevel         addition       0.920       0.920    364.3880    10444.1134    1274.2805    
+##    2         JobRole         addition       0.949       0.948     18.4410    10189.3374    1027.0971    
+##    3    TotalWorkingYears    addition       0.951       0.949      1.0580    10172.0399    1011.8016    
+##    4        DailyRate        addition       0.951       0.950     -1.6210    10169.2883    1008.7102    
+##    5     BusinessTravel      addition       0.951       0.950     -6.0850    10166.6633    1004.9317    
+##    6       Department        addition       0.952       0.950     -8.8200    10165.7637    1002.5923    
+## ----------------------------------------------------------------------------------------------------</code></pre>
 <pre class="r"><code>#Best fit from forward selection includes parameters: JobLevel + JobRole + TotalWorkingYears + BusinessTravel + Education + DailyRate + JobInvolvement + YearsWithCurrManager
 
 #Examine scatter plots to look for any non-linear relationships that may need transformation
@@ -1351,47 +1234,47 @@ summary(model2)</code></pre>
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -2944.7  -633.6   -48.2   587.1  4121.0 
+## -3005.5  -644.3   -81.5   624.4  4170.0 
 ## 
 ## Coefficients:
 ##                                   Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)                      3122.2823   320.9111   9.729  &lt; 2e-16 ***
-## JobLevel2                        1767.7393   170.6807  10.357  &lt; 2e-16 ***
-## JobLevel3                        4859.3162   231.0134  21.035  &lt; 2e-16 ***
-## JobLevel4                        8282.5682   356.2634  23.248  &lt; 2e-16 ***
-## JobLevel5                       10909.3737   431.1512  25.303  &lt; 2e-16 ***
-## JobRoleHuman Resources           -948.6995   303.5583  -3.125  0.00186 ** 
-## JobRoleLaboratory Technician    -1189.6939   213.2866  -5.578 3.73e-08 ***
-## JobRoleManager                   3543.6464   304.7739  11.627  &lt; 2e-16 ***
-## JobRoleManufacturing Director     179.6723   197.0673   0.912  0.36229    
-## JobRoleResearch Director         3727.9761   260.2649  14.324  &lt; 2e-16 ***
-## JobRoleResearch Scientist        -990.2517   218.8335  -4.525 7.32e-06 ***
-## JobRoleSales Executive            -12.4444   164.3653  -0.076  0.93967    
-## JobRoleSales Representative     -1168.3951   262.4640  -4.452 1.02e-05 ***
-## TotalWorkingYears                  37.3356    10.6327   3.511  0.00048 ***
-## BusinessTravelTravel_Frequently   227.5666   161.2149   1.412  0.15861    
-## BusinessTravelTravel_Rarely       435.1940   136.3821   3.191  0.00149 ** 
-## Education2                        -20.0077   148.8033  -0.134  0.89309    
-## Education3                          1.4892   137.8888   0.011  0.99139    
-## Education4                        129.4419   145.7162   0.888  0.37474    
-## Education5                       -383.2663   266.1135  -1.440  0.15034    
-## DailyRate                           0.2196     0.1054   2.082  0.03773 *  
-## JobInvolvement2                   -55.4742   190.3277  -0.291  0.77080    
-## JobInvolvement3                  -123.3775   181.7777  -0.679  0.49758    
-## JobInvolvement4                  -122.7514   223.6491  -0.549  0.58331    
-## YearsWithCurrManager                7.8955    13.9961   0.564  0.57289    
+## (Intercept)                      3339.8207   315.3692  10.590  &lt; 2e-16 ***
+## JobLevel2                        1581.0133   166.9685   9.469  &lt; 2e-16 ***
+## JobLevel3                        4824.2057   223.2152  21.612  &lt; 2e-16 ***
+## JobLevel4                        8170.3849   345.2635  23.664  &lt; 2e-16 ***
+## JobLevel5                       10889.2637   408.1414  26.680  &lt; 2e-16 ***
+## JobRoleHuman Resources          -1085.0643   291.1244  -3.727 0.000212 ***
+## JobRoleLaboratory Technician    -1264.6580   205.6927  -6.148 1.45e-09 ***
+## JobRoleManager                   3354.8561   283.8689  11.818  &lt; 2e-16 ***
+## JobRoleManufacturing Director     364.2035   187.5718   1.942 0.052657 .  
+## JobRoleResearch Director         3602.1849   257.3188  13.999  &lt; 2e-16 ***
+## JobRoleResearch Scientist       -1029.2868   210.1542  -4.898 1.26e-06 ***
+## JobRoleSales Executive              2.9233   162.8707   0.018 0.985686    
+## JobRoleSales Representative     -1435.3966   260.1594  -5.517 5.18e-08 ***
+## TotalWorkingYears                  41.2136    10.2738   4.012 6.82e-05 ***
+## BusinessTravelTravel_Frequently   324.6332   164.0786   1.979 0.048339 *  
+## BusinessTravelTravel_Rarely       347.3407   143.7015   2.417 0.015950 *  
+## Education2                       -110.9813   145.7978  -0.761 0.446845    
+## Education3                        -95.5411   133.3406  -0.717 0.473957    
+## Education4                         80.7807   142.3777   0.567 0.570682    
+## Education5                       -566.2629   286.3611  -1.977 0.048461 *  
+## DailyRate                           0.2205     0.1045   2.109 0.035344 *  
+## JobInvolvement2                  -104.6864   188.7413  -0.555 0.579343    
+## JobInvolvement3                   -19.9867   179.9904  -0.111 0.911620    
+## JobInvolvement4                   108.5841   220.4724   0.493 0.622547    
+## YearsWithCurrManager              -14.3134    13.2383  -1.081 0.280049    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 1007 on 584 degrees of freedom
-## Multiple R-squared:  0.9509, Adjusted R-squared:  0.9489 
-## F-statistic: 471.1 on 24 and 584 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 1003 on 584 degrees of freedom
+## Multiple R-squared:  0.9523, Adjusted R-squared:  0.9503 
+## F-statistic: 485.4 on 24 and 584 DF,  p-value: &lt; 2.2e-16</code></pre>
 <pre class="r"><code>mse=mean(residuals(model2)^2)
 mse</code></pre>
-<pre><code>## [1] 972800.5</code></pre>
+<pre><code>## [1] 965346.1</code></pre>
 <pre class="r"><code>rmse=sqrt(mse)
 rmse #935</code></pre>
-<pre><code>## [1] 986.3065</code></pre>
+<pre><code>## [1] 982.5203</code></pre>
 <pre class="r"><code>plot(model2, which=1, col=c(&quot;blue&quot;)) # Residuals vs Fitted Plot</code></pre>
 <p><img src="CaseStudy2_ver4_files/figure-html/corr-Income-9.png" width="672" /></p>
 <pre class="r"><code>plot(model2, which=2, col=c(&quot;red&quot;))  # Q-Q Plot</code></pre>
@@ -1413,46 +1296,46 @@ summary(model3)</code></pre>
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -2933.5  -658.4   -52.0   551.6  4115.4 
+## -3032.5  -651.7   -85.2   633.4  4193.6 
 ## 
 ## Coefficients:
 ##                                   Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)                      3129.7785   320.4490   9.767  &lt; 2e-16 ***
-## JobLevel2                        1772.6763   170.3568  10.406  &lt; 2e-16 ***
-## JobLevel3                        4868.9522   230.2468  21.147  &lt; 2e-16 ***
-## JobLevel4                        8268.0628   355.1271  23.282  &lt; 2e-16 ***
-## JobLevel5                       10897.2956   430.3683  25.321  &lt; 2e-16 ***
-## JobRoleHuman Resources           -942.7707   303.1995  -3.109  0.00197 ** 
-## JobRoleLaboratory Technician    -1184.3781   212.9541  -5.562 4.07e-08 ***
-## JobRoleManager                   3537.1067   304.3759  11.621  &lt; 2e-16 ***
-## JobRoleManufacturing Director     183.6127   196.8286   0.933  0.35128    
-## JobRoleResearch Director         3720.2851   259.7561  14.322  &lt; 2e-16 ***
-## JobRoleResearch Scientist        -985.5274   218.5457  -4.509 7.85e-06 ***
-## JobRoleSales Executive             -7.2524   164.0118  -0.044  0.96475    
-## JobRoleSales Representative     -1167.5192   262.3065  -4.451 1.02e-05 ***
-## TotalWorkingYears                  39.7855     9.6997   4.102 4.68e-05 ***
-## BusinessTravelTravel_Frequently   228.8190   161.1056   1.420  0.15605    
-## BusinessTravelTravel_Rarely       432.7286   136.2326   3.176  0.00157 ** 
-## Education2                        -24.0160   148.5469  -0.162  0.87162    
-## Education3                         -1.0371   137.7357  -0.008  0.99399    
-## Education4                        127.6729   145.5975   0.877  0.38091    
-## Education5                       -377.6771   265.7740  -1.421  0.15584    
-## DailyRate                           0.2186     0.1054   2.075  0.03845 *  
-## JobInvolvement2                   -56.1418   190.2131  -0.295  0.76798    
-## JobInvolvement3                  -126.4450   181.5905  -0.696  0.48651    
-## JobInvolvement4                  -118.4917   223.3913  -0.530  0.59602    
+## (Intercept)                      3341.9217   315.4087  10.596  &lt; 2e-16 ***
+## JobLevel2                        1569.3208   166.6420   9.417  &lt; 2e-16 ***
+## JobLevel3                        4803.5477   222.4281  21.596  &lt; 2e-16 ***
+## JobLevel4                        8194.0305   344.6199  23.777  &lt; 2e-16 ***
+## JobLevel5                       10901.7849   408.0360  26.718  &lt; 2e-16 ***
+## JobRoleHuman Resources          -1094.3067   291.0409  -3.760 0.000187 ***
+## JobRoleLaboratory Technician    -1282.6835   205.0456  -6.256 7.65e-10 ***
+## JobRoleManager                   3356.8405   283.9040  11.824  &lt; 2e-16 ***
+## JobRoleManufacturing Director     349.0006   187.0710   1.866 0.062597 .  
+## JobRoleResearch Director         3587.7015   257.0070  13.960  &lt; 2e-16 ***
+## JobRoleResearch Scientist       -1042.9214   209.8058  -4.971 8.77e-07 ***
+## JobRoleSales Executive             -9.5199   162.4871  -0.059 0.953300    
+## JobRoleSales Representative     -1440.9623   260.1460  -5.539 4.60e-08 ***
+## TotalWorkingYears                  37.6729     9.7393   3.868 0.000122 ***
+## BusinessTravelTravel_Frequently   319.0783   164.0218   1.945 0.052213 .  
+## BusinessTravelTravel_Rarely       347.6510   143.7219   2.419 0.015871 *  
+## Education2                       -116.7956   145.7197  -0.802 0.423163    
+## Education3                        -96.2153   133.3584  -0.721 0.470903    
+## Education4                         74.5452   142.2814   0.524 0.600527    
+## Education5                       -584.5788   285.9009  -2.045 0.041332 *  
+## DailyRate                           0.2172     0.1045   2.079 0.038088 *  
+## JobInvolvement2                  -103.1241   188.7631  -0.546 0.585058    
+## JobInvolvement3                   -18.5660   180.0116  -0.103 0.917889    
+## JobInvolvement4                   101.1983   220.3984   0.459 0.646289    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 1007 on 585 degrees of freedom
-## Multiple R-squared:  0.9509, Adjusted R-squared:  0.9489 
-## F-statistic: 492.1 on 23 and 585 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 1003 on 585 degrees of freedom
+## Multiple R-squared:  0.9522, Adjusted R-squared:  0.9503 
+## F-statistic: 506.3 on 23 and 585 DF,  p-value: &lt; 2.2e-16</code></pre>
 <pre class="r"><code>mse=mean(residuals(model3)^2)
 mse</code></pre>
-<pre><code>## [1] 973330.6</code></pre>
+<pre><code>## [1] 967278.5</code></pre>
 <pre class="r"><code>rmse=sqrt(mse)
 rmse #936</code></pre>
-<pre><code>## [1] 986.5752</code></pre>
+<pre><code>## [1] 983.5032</code></pre>
 <pre class="r"><code>plot(model3, which=1, col=c(&quot;blue&quot;)) # Residuals vs Fitted Plot</code></pre>
 <p><img src="CaseStudy2_ver4_files/figure-html/corr-Income-14.png" width="672" /></p>
 <pre class="r"><code>plot(model3, which=2, col=c(&quot;red&quot;))  # Q-Q Plot</code></pre>
@@ -1473,45 +1356,45 @@ summary(model4)</code></pre>
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -2861.7  -618.2   -82.9   585.7  4251.7 
+## -2937.4  -622.0   -99.3   665.1  4325.0 
 ## 
 ## Coefficients:
 ##                                  Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)                      3286.123    312.339  10.521  &lt; 2e-16 ***
-## JobLevel2                        1775.610    170.831  10.394  &lt; 2e-16 ***
-## JobLevel3                        4863.215    230.878  21.064  &lt; 2e-16 ***
-## JobLevel4                        8262.369    356.116  23.201  &lt; 2e-16 ***
-## JobLevel5                       10940.535    431.074  25.380  &lt; 2e-16 ***
-## JobRoleHuman Resources           -950.592    304.030  -3.127  0.00186 ** 
-## JobRoleLaboratory Technician    -1193.129    213.512  -5.588 3.52e-08 ***
-## JobRoleManager                   3497.418    304.629  11.481  &lt; 2e-16 ***
-## JobRoleManufacturing Director     187.935    197.372   0.952  0.34140    
-## JobRoleResearch Director         3696.351    260.230  14.204  &lt; 2e-16 ***
-## JobRoleResearch Scientist        -994.350    219.120  -4.538 6.90e-06 ***
-## JobRoleSales Executive            -14.821    164.433  -0.090  0.92821    
-## JobRoleSales Representative     -1171.070    263.039  -4.452 1.02e-05 ***
-## TotalWorkingYears                  39.724      9.727   4.084 5.04e-05 ***
-## BusinessTravelTravel_Frequently   220.528    161.509   1.365  0.17265    
-## BusinessTravelTravel_Rarely       436.963    136.601   3.199  0.00145 ** 
-## Education2                        -35.060    148.869  -0.236  0.81389    
-## Education3                         -9.151    138.068  -0.066  0.94718    
-## Education4                        116.177    145.902   0.796  0.42620    
-## Education5                       -373.827    266.516  -1.403  0.16125    
-## JobInvolvement2                   -29.049    190.299  -0.153  0.87873    
-## JobInvolvement3                   -84.851    180.989  -0.469  0.63937    
-## JobInvolvement4                   -88.940    223.564  -0.398  0.69090    
+## (Intercept)                      3527.246    303.401  11.626  &lt; 2e-16 ***
+## JobLevel2                        1582.226    166.997   9.475  &lt; 2e-16 ***
+## JobLevel3                        4816.118    222.975  21.599  &lt; 2e-16 ***
+## JobLevel4                        8202.829    345.569  23.737  &lt; 2e-16 ***
+## JobLevel5                       10951.954    408.474  26.812  &lt; 2e-16 ***
+## JobRoleHuman Resources          -1097.799    291.860  -3.761 0.000186 ***
+## JobRoleLaboratory Technician    -1300.494    205.446  -6.330 4.87e-10 ***
+## JobRoleManager                   3292.805    283.026  11.634  &lt; 2e-16 ***
+## JobRoleManufacturing Director     334.478    187.469   1.784 0.074913 .  
+## JobRoleResearch Director         3555.653    257.270  13.821  &lt; 2e-16 ***
+## JobRoleResearch Scientist       -1046.656    210.392  -4.975 8.59e-07 ***
+## JobRoleSales Executive            -16.361    162.913  -0.100 0.920041    
+## JobRoleSales Representative     -1447.657    260.862  -5.550 4.34e-08 ***
+## TotalWorkingYears                  37.941      9.766   3.885 0.000114 ***
+## BusinessTravelTravel_Frequently   307.500    164.391   1.871 0.061907 .  
+## BusinessTravelTravel_Rarely       346.111    144.127   2.401 0.016641 *  
+## Education2                       -131.738    145.954  -0.903 0.367108    
+## Education3                       -107.488    133.625  -0.804 0.421494    
+## Education4                         61.859    142.553   0.434 0.664494    
+## Education5                       -597.325    286.644  -2.084 0.037606 *  
+## JobInvolvement2                  -108.207    189.281  -0.572 0.567762    
+## JobInvolvement3                    -6.098    180.421  -0.034 0.973047    
+## JobInvolvement4                   102.862    221.020   0.465 0.641822    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 1009 on 586 degrees of freedom
-## Multiple R-squared:  0.9505, Adjusted R-squared:  0.9486 
-## F-statistic: 511.4 on 22 and 586 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 1006 on 586 degrees of freedom
+## Multiple R-squared:  0.9518, Adjusted R-squared:   0.95 
+## F-statistic: 526.1 on 22 and 586 DF,  p-value: &lt; 2.2e-16</code></pre>
 <pre class="r"><code>mse=mean(residuals(model3)^2)
 mse</code></pre>
-<pre><code>## [1] 973330.6</code></pre>
+<pre><code>## [1] 967278.5</code></pre>
 <pre class="r"><code>rmse=sqrt(mse)
 rmse #936</code></pre>
-<pre><code>## [1] 986.5752</code></pre>
+<pre><code>## [1] 983.5032</code></pre>
 <pre class="r"><code>plot(model4, which=1, col=c(&quot;blue&quot;)) # Residuals vs Fitted Plot</code></pre>
 <p><img src="CaseStudy2_ver4_files/figure-html/corr-Income-19.png" width="672" /></p>
 <pre class="r"><code>plot(model4, which=2, col=c(&quot;red&quot;))  # Q-Q Plot</code></pre>
@@ -1539,10 +1422,10 @@ testDDS_cor$prediction &lt;- predict(model4, testDDS_cor)
 testDDS_cor$residual &lt;- testDDS_cor$MonthlyIncome - testDDS_cor$prediction
 mse=mean((testDDS_cor$residual)^2)
 mse</code></pre>
-<pre><code>## [1] 1002000</code></pre>
+<pre><code>## [1] 1036502</code></pre>
 <pre class="r"><code>rmse=sqrt(mse)
 rmse #1115</code></pre>
-<pre><code>## [1] 1000.999</code></pre>
+<pre><code>## [1] 1018.087</code></pre>
 <p>Use Best Model to predict attrition for Competition Set</p>
 <pre class="r"><code>Competition2 = read.csv(&quot;/Users/rickfontenot/Dropbox/SMU/GitHub/SMU/DS6306/CaseStudy2/CaseStudy2CompSet No Salary.csv&quot;, header = TRUE)
 
@@ -1663,56 +1546,53 @@ mosaicplot(JobSatisfaction, shade = TRUE, las=2, main = &quot;JobSatisfaction&qu
 ## [8] base     
 ## 
 ## other attached packages:
-##  [1] CORElearn_1.54.2   rstatix_0.6.0      olsrr_0.5.3        corrplot_0.84     
-##  [5] gplots_3.1.1       DataExplorer_0.8.2 table1_1.2.1       ggthemes_4.2.0    
-##  [9] mapproj_1.2.7      maps_3.3.0         class_7.3-17       e1071_1.7-4       
-## [13] caret_6.0-86       lattice_0.20-41    ggpubr_0.4.0       plotly_4.9.2.1    
-## [17] VIM_6.0.0          colorspace_1.4-1   mice_3.12.0        usmap_0.5.1       
-## [21] GGally_2.0.0       visdat_0.5.3       forcats_0.5.0      stringr_1.4.0     
+##  [1] CORElearn_1.54.2   table1_1.2.1       ggthemes_4.2.0     mapproj_1.2.7     
+##  [5] maps_3.3.0         class_7.3-17       e1071_1.7-4        plotly_4.9.2.1    
+##  [9] VIM_6.0.0          colorspace_1.4-1   mice_3.12.0        usmap_0.5.1       
+## [13] GGally_2.0.0       visdat_0.5.3       rstatix_0.6.0      ggpubr_0.4.0      
+## [17] olsrr_0.5.3        corrplot_0.84      gplots_3.1.1       DataExplorer_0.8.2
+## [21] caret_6.0-86       lattice_0.20-41    forcats_0.5.0      stringr_1.4.0     
 ## [25] purrr_0.3.4        readr_1.4.0        tidyr_1.1.2        tibble_3.0.3      
-## [29] tidyverse_1.3.0    ggplot2_3.3.2      shinyWidgets_0.5.7 dplyr_1.0.2       
-## [33] shiny_1.5.0       
+## [29] ggplot2_3.3.2      tidyverse_1.3.0    dplyr_1.0.2       
 ## 
 ## loaded via a namespace (and not attached):
-##   [1] readxl_1.3.1         backports_1.1.10     igraph_1.2.6        
-##   [4] plyr_1.8.6           lazyeval_0.2.2       sp_1.4-4            
+##   [1] readxl_1.3.1         backports_1.1.10     plyr_1.8.6          
+##   [4] igraph_1.2.6         lazyeval_0.2.2       sp_1.4-4            
 ##   [7] splines_4.0.2        digest_0.6.25        foreach_1.5.1       
 ##  [10] htmltools_0.5.0      fansi_0.4.1          magrittr_1.5        
 ##  [13] cluster_2.1.0        openxlsx_4.2.3       recipes_0.1.15      
-##  [16] modelr_0.1.8         gower_0.2.2          ggrepel_0.8.2       
-##  [19] rvest_0.3.6          haven_2.3.1          xfun_0.17           
-##  [22] crayon_1.3.4         jsonlite_1.7.1       survival_3.1-12     
-##  [25] zoo_1.8-8            iterators_1.0.13     glue_1.4.2          
-##  [28] gtable_0.3.0         ipred_0.9-9          car_3.0-10          
-##  [31] DEoptimR_1.0-8       abind_1.4-5          scales_1.1.1        
-##  [34] DBI_1.1.0            Rcpp_1.0.5           plotrix_3.8-1       
-##  [37] viridisLite_0.3.0    xtable_1.8-4         laeken_0.5.1        
-##  [40] foreign_0.8-80       Formula_1.2-4        stats4_4.0.2        
-##  [43] lava_1.6.8.1         prodlim_2019.11.13   vcd_1.4-8           
-##  [46] htmlwidgets_1.5.1    httr_1.4.2           RColorBrewer_1.1-2  
-##  [49] ellipsis_0.3.1       pkgconfig_2.0.3      reshape_0.8.8       
-##  [52] farver_2.0.3         nnet_7.3-14          dbplyr_2.0.0        
-##  [55] utf8_1.1.4           tidyselect_1.1.0     labeling_0.3        
-##  [58] rlang_0.4.10         reshape2_1.4.4       later_1.1.0.1       
-##  [61] munsell_0.5.0        cellranger_1.1.0     tools_4.0.2         
-##  [64] cli_2.0.2            generics_0.1.0       ranger_0.12.1       
-##  [67] broom_0.7.3          evaluate_0.14        fastmap_1.0.1       
-##  [70] goftest_1.2-2        yaml_2.2.1           ModelMetrics_1.2.2.2
-##  [73] knitr_1.30           fs_1.5.0             zip_2.1.1           
-##  [76] robustbase_0.93-6    caTools_1.18.1       nlme_3.1-148        
-##  [79] mime_0.9             xml2_1.3.2           compiler_4.0.2      
-##  [82] rstudioapi_0.11      curl_4.3             ggsignif_0.6.0      
-##  [85] reprex_0.3.0         stringi_1.5.3        Matrix_1.2-18       
-##  [88] vctrs_0.3.4          networkD3_0.4        pillar_1.4.6        
-##  [91] lifecycle_0.2.0      lmtest_0.9-38        bitops_1.0-6        
-##  [94] data.table_1.13.6    httpuv_1.5.4         R6_2.4.1            
-##  [97] promises_1.1.1       rpart.plot_3.0.9     KernSmooth_2.23-17  
-## [100] gridExtra_2.3        rio_0.5.16           codetools_0.2-16    
-## [103] gtools_3.8.2         boot_1.3-25          MASS_7.3-51.6       
-## [106] assertthat_0.2.1     nortest_1.0-4        withr_2.3.0         
-## [109] parallel_4.0.2       mgcv_1.8-31          hms_0.5.3           
-## [112] rpart_4.1-15         timeDate_3043.102    rmarkdown_2.6       
-## [115] carData_3.0-4        pROC_1.16.2          lubridate_1.7.9.2</code></pre>
+##  [16] modelr_0.1.8         gower_0.2.2          rvest_0.3.6         
+##  [19] haven_2.3.1          xfun_0.17            crayon_1.3.4        
+##  [22] jsonlite_1.7.1       survival_3.1-12      zoo_1.8-8           
+##  [25] iterators_1.0.13     glue_1.4.2           gtable_0.3.0        
+##  [28] ipred_0.9-9          car_3.0-10           DEoptimR_1.0-8      
+##  [31] abind_1.4-5          scales_1.1.1         DBI_1.1.0           
+##  [34] Rcpp_1.0.5           plotrix_3.8-1        viridisLite_0.3.0   
+##  [37] laeken_0.5.1         foreign_0.8-80       Formula_1.2-4       
+##  [40] stats4_4.0.2         lava_1.6.8.1         prodlim_2019.11.13  
+##  [43] vcd_1.4-8            htmlwidgets_1.5.1    httr_1.4.2          
+##  [46] RColorBrewer_1.1-2   ellipsis_0.3.1       farver_2.0.3        
+##  [49] pkgconfig_2.0.3      reshape_0.8.8        nnet_7.3-14         
+##  [52] dbplyr_2.0.0         utf8_1.1.4           labeling_0.3        
+##  [55] tidyselect_1.1.0     rlang_0.4.10         reshape2_1.4.4      
+##  [58] munsell_0.5.0        cellranger_1.1.0     tools_4.0.2         
+##  [61] cli_2.0.2            generics_0.1.0       ranger_0.12.1       
+##  [64] broom_0.7.3          evaluate_0.14        yaml_2.2.1          
+##  [67] goftest_1.2-2        ModelMetrics_1.2.2.2 knitr_1.30          
+##  [70] fs_1.5.0             zip_2.1.1            robustbase_0.93-6   
+##  [73] caTools_1.18.1       nlme_3.1-148         xml2_1.3.2          
+##  [76] compiler_4.0.2       rstudioapi_0.11      curl_4.3            
+##  [79] ggsignif_0.6.0       reprex_0.3.0         stringi_1.5.3       
+##  [82] Matrix_1.2-18        vctrs_0.3.4          pillar_1.4.6        
+##  [85] lifecycle_0.2.0      networkD3_0.4        lmtest_0.9-38       
+##  [88] data.table_1.13.6    bitops_1.0-6         R6_2.4.1            
+##  [91] rpart.plot_3.0.9     KernSmooth_2.23-17   gridExtra_2.3       
+##  [94] rio_0.5.16           codetools_0.2-16     boot_1.3-25         
+##  [97] MASS_7.3-51.6        gtools_3.8.2         assertthat_0.2.1    
+## [100] withr_2.3.0          nortest_1.0-4        parallel_4.0.2      
+## [103] hms_0.5.3            rpart_4.1-15         timeDate_3043.102   
+## [106] rmarkdown_2.6        carData_3.0-4        pROC_1.16.2         
+## [109] lubridate_1.7.9.2</code></pre>
 
 
 
